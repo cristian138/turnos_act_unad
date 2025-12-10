@@ -1,0 +1,261 @@
+import React, { useEffect, useState } from 'react';
+import { api } from '../lib/api';
+import { Button } from '../components/ui/button';
+import { Card } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../components/ui/dialog';
+import { toast } from 'sonner';
+import { Plus, Pencil, Trash2, UserCheck, UserX } from 'lucide-react';
+
+const Usuarios = () => {
+  const [usuarios, setUsuarios] = useState([]);
+  const [servicios, setServicios] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+  const [formData, setFormData] = useState({
+    nombre: '',
+    email: '',
+    password: '',
+    rol: 'funcionario',
+    servicios_asignados: []
+  });
+
+  useEffect(() => {
+    cargarUsuarios();
+    cargarServicios();
+  }, []);
+
+  const cargarUsuarios = async () => {
+    try {
+      const response = await api.usuarios.listar();
+      setUsuarios(response.data);
+    } catch (error) {
+      toast.error('Error al cargar usuarios');
+    }
+  };
+
+  const cargarServicios = async () => {
+    try {
+      const response = await api.servicios.listar();
+      setServicios(response.data.filter(s => s.activo));
+    } catch (error) {
+      toast.error('Error al cargar servicios');
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (modoEdicion) {
+        await api.usuarios.actualizar(usuarioSeleccionado.id, formData);
+        toast.success('Usuario actualizado exitosamente');
+      } else {
+        await api.usuarios.crear(formData);
+        toast.success('Usuario creado exitosamente');
+      }
+
+      setDialogOpen(false);
+      resetForm();
+      cargarUsuarios();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Error al guardar usuario');
+    }
+  };
+
+  const handleEditar = (usuario) => {
+    setUsuarioSeleccionado(usuario);
+    setFormData({
+      nombre: usuario.nombre,
+      email: usuario.email,
+      password: '',
+      rol: usuario.rol,
+      servicios_asignados: usuario.servicios_asignados || []
+    });
+    setModoEdicion(true);
+    setDialogOpen(true);
+  };
+
+  const handleEliminar = async (id) => {
+    if (!window.confirm('¿Estás seguro de eliminar este usuario?')) return;
+
+    try {
+      await api.usuarios.eliminar(id);
+      toast.success('Usuario eliminado exitosamente');
+      cargarUsuarios();
+    } catch (error) {
+      toast.error('Error al eliminar usuario');
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      nombre: '',
+      email: '',
+      password: '',
+      rol: 'funcionario',
+      servicios_asignados: []
+    });
+    setModoEdicion(false);
+    setUsuarioSeleccionado(null);
+  };
+
+  const getRolBadgeColor = (rol) => {
+    const colors = {
+      administrador: 'bg-primary text-white',
+      funcionario: 'bg-secondary text-white',
+      vap: 'bg-accent text-black'
+    };
+    return colors[rol] || 'bg-slate-200';
+  };
+
+  return (
+    <div data-testid="usuarios-page">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-4xl font-heading font-bold text-primary mb-2">Usuarios</h1>
+          <p className="text-slate-600">Gestiona los usuarios del sistema</p>
+        </div>
+        <Dialog open={dialogOpen} onOpenChange={(open) => {
+          setDialogOpen(open);
+          if (!open) resetForm();
+        }}>
+          <DialogTrigger asChild>
+            <Button className="bg-primary" data-testid="nuevo-usuario-button">
+              <Plus className="mr-2 h-4 w-4" />
+              Nuevo Usuario
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {modoEdicion ? 'Editar Usuario' : 'Nuevo Usuario'}
+              </DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label>Nombre</Label>
+                <Input
+                  value={formData.nombre}
+                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                  required
+                  data-testid="usuario-nombre-input"
+                />
+              </div>
+              <div>
+                <Label>Email</Label>
+                <Input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  data-testid="usuario-email-input"
+                />
+              </div>
+              <div>
+                <Label>Contraseña {modoEdicion && '(dejar vacío para no cambiar)'}</Label>
+                <Input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  required={!modoEdicion}
+                  data-testid="usuario-password-input"
+                />
+              </div>
+              <div>
+                <Label>Rol</Label>
+                <Select
+                  value={formData.rol}
+                  onValueChange={(value) => setFormData({ ...formData, rol: value })}
+                >
+                  <SelectTrigger data-testid="usuario-rol-select">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="administrador">Administrador</SelectItem>
+                    <SelectItem value="funcionario">Funcionario</SelectItem>
+                    <SelectItem value="vap">VAP</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button type="submit" className="w-full" data-testid="guardar-usuario-button">
+                {modoEdicion ? 'Actualizar' : 'Crear'} Usuario
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <Card>
+        <div className="overflow-x-auto">
+          <table className="w-full" data-testid="usuarios-table">
+            <thead className="bg-slate-50 border-b">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Nombre</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Email</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Rol</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Estado</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-slate-900">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {usuarios.map((usuario) => (
+                <tr key={usuario.id} className="hover:bg-slate-50">
+                  <td className="px-6 py-4 text-sm text-slate-900">{usuario.nombre}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600">{usuario.email}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${getRolBadgeColor(usuario.rol)}`}>
+                      {usuario.rol}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    {usuario.activo ? (
+                      <UserCheck className="h-5 w-5 text-green-500" />
+                    ) : (
+                      <UserX className="h-5 w-5 text-red-500" />
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEditar(usuario)}
+                      data-testid={`editar-usuario-${usuario.id}`}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEliminar(usuario.id)}
+                      data-testid={`eliminar-usuario-${usuario.id}`}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default Usuarios;
