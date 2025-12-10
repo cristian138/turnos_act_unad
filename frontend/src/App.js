@@ -1,53 +1,117 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { SocketProvider } from './context/SocketContext';
+import { Toaster } from 'sonner';
+import ProtectedRoute from './components/ProtectedRoute';
+import Sidebar from './components/Sidebar';
+import Login from './pages/Login';
+import AdminDashboard from './pages/AdminDashboard';
+import Usuarios from './pages/Usuarios';
+import Servicios from './pages/Servicios';
+import Reportes from './pages/Reportes';
+import Configuracion from './pages/Configuracion';
+import FuncionarioDashboard from './pages/FuncionarioDashboard';
+import VAPDashboard from './pages/VAPDashboard';
+import PantallaPublica from './pages/PantallaPublica';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
+const DashboardLayout = ({ children }) => {
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <div className="flex-1 p-8 bg-slate-50">
+        {children}
+      </div>
     </div>
   );
 };
 
+const DashboardRouter = () => {
+  const { usuario } = useAuth();
+
+  if (!usuario) return null;
+
+  if (usuario.rol === 'administrador') {
+    return <AdminDashboard />;
+  } else if (usuario.rol === 'funcionario') {
+    return <FuncionarioDashboard />;
+  } else if (usuario.rol === 'vap') {
+    return <VAPDashboard />;
+  }
+
+  return <div>Rol no reconocido</div>;
+};
+
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <AuthProvider>
+      <SocketProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/pantalla-publica" element={<PantallaPublica />} />
+            
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <DashboardRouter />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/usuarios"
+              element={
+                <ProtectedRoute rolesPermitidos={['administrador']}>
+                  <DashboardLayout>
+                    <Usuarios />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/servicios"
+              element={
+                <ProtectedRoute rolesPermitidos={['administrador']}>
+                  <DashboardLayout>
+                    <Servicios />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/reportes"
+              element={
+                <ProtectedRoute rolesPermitidos={['administrador', 'funcionario']}>
+                  <DashboardLayout>
+                    <Reportes />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/configuracion"
+              element={
+                <ProtectedRoute rolesPermitidos={['administrador']}>
+                  <DashboardLayout>
+                    <Configuracion />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="/" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </BrowserRouter>
+        <Toaster position="top-right" richColors />
+      </SocketProvider>
+    </AuthProvider>
   );
 }
 
