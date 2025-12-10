@@ -1,0 +1,208 @@
+{
+  "project_name": "UNAD Queue Management System",
+  "design_philosophy": {
+    "identity": "Institutional Modernity",
+    "core_values": ["Efficiency", "Transparency", "Accessibility"],
+    "aesthetic": "Swiss-Style Institutional. High contrast, organized grids, functional color coding.",
+    "anti_patterns": [
+      "Generic SaaS gradients",
+      "Overly rounded 'playful' buttons",
+      "Low contrast text",
+      "Cluttered dashboards"
+    ]
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Manrope, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "weights": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "bold": 700,
+      "black": 900
+    },
+    "usage": {
+      "h1": "text-4xl font-bold tracking-tight text-primary",
+      "h2": "text-3xl font-bold tracking-tight text-primary",
+      "h3": "text-2xl font-semibold text-primary",
+      "body": "text-base font-normal text-slate-600 dark:text-slate-300",
+      "ticket_number": "font-mono text-5xl font-black tracking-widest"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "DEFAULT": "#005883",
+        "foreground": "#FFFFFF",
+        "50": "#f0f9ff",
+        "100": "#e0f2fe",
+        "200": "#bae6fd",
+        "300": "#7dd3fc",
+        "400": "#38bdf8",
+        "500": "#0ea5e9",
+        "600": "#0284c7",
+        "700": "#005883",
+        "800": "#075985",
+        "900": "#0c4a6e"
+      },
+      "secondary": {
+        "DEFAULT": "#F47920",
+        "foreground": "#FFFFFF",
+        "50": "#fff7ed",
+        "100": "#ffedd5",
+        "200": "#fed7aa",
+        "300": "#fdba74",
+        "400": "#fb923c",
+        "500": "#F47920",
+        "600": "#ea580c",
+        "700": "#c2410c",
+        "800": "#9a3412",
+        "900": "#7c2d12"
+      },
+      "accent": {
+        "DEFAULT": "#F0B429",
+        "foreground": "#000000",
+        "50": "#fefce8",
+        "100": "#fef9c3",
+        "200": "#fef08a",
+        "300": "#fde047",
+        "400": "#F0B429",
+        "500": "#eab308",
+        "600": "#ca8a04",
+        "700": "#a16207",
+        "800": "#854d0e",
+        "900": "#713f12"
+      },
+      "background": {
+        "light": "#F8FAFC",
+        "dark": "#0F172A"
+      },
+      "surface": {
+        "light": "#FFFFFF",
+        "dark": "#1E293B"
+      },
+      "status": {
+        "success": "#10B981",
+        "warning": "#F59E0B",
+        "error": "#EF4444",
+        "info": "#3B82F6"
+      }
+    },
+    "rules": [
+      "Use Primary (#005883) for headers, primary buttons, and active states.",
+      "Use Secondary (#F47920) for Call-to-Actions (CTAs) and high-priority alerts.",
+      "Use Accent (#F0B429) sparingly for 'In Progress' states or highlights.",
+      "NEVER use gradients for text.",
+      "Ensure 4.5:1 contrast ratio for all text."
+    ]
+  },
+  "layout_strategies": {
+    "admin_dashboard": {
+      "type": "sidebar_layout",
+      "grid": "grid-cols-12 gap-6",
+      "spacing": "p-6 md:p-8",
+      "structure": [
+        "Sidebar: Fixed width (250px), dark blue (#005883).",
+        "Header: White, sticky, contains user profile and breadcrumbs.",
+        "Content: Bento grid layout. Cards with 1px border, no shadow."
+      ]
+    },
+    "official_dashboard": {
+      "type": "split_screen",
+      "grid": "grid-cols-12 gap-4",
+      "structure": [
+        "Left Panel (4 cols): Queue List (Waiting). Scrollable.",
+        "Right Panel (8 cols): Current Ticket Action Area. Large controls.",
+        "Top Bar: Status toggle (Online/Busy/Offline)."
+      ]
+    },
+    "public_display": {
+      "type": "airport_display",
+      "theme": "dark",
+      "grid": "grid-cols-12 gap-0 h-screen",
+      "structure": [
+        "Left (8 cols): Current Called Ticket (Massive). Video/Image carousel below.",
+        "Right (4 cols): History/Waiting List. High contrast list."
+      ]
+    },
+    "kiosk": {
+      "type": "touch_interface",
+      "theme": "light",
+      "structure": [
+        "Centered Layout.",
+        "Massive Buttons (h-32 or h-40).",
+        "Simple Steps: Select Service -> Select Priority -> Print."
+      ]
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md shadow-sm transition-all active:scale-95",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/90 h-10 px-4 py-2 rounded-md shadow-sm transition-all active:scale-95",
+      "outline": "border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md transition-all",
+      "ghost": "hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md transition-all",
+      "kiosk": "h-32 text-2xl font-bold shadow-lg hover:shadow-xl transition-all active:scale-95 border-2 border-primary/10"
+    },
+    "cards": {
+      "default": "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "interactive": "rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all cursor-pointer",
+      "metric": "p-6 flex flex-col gap-2"
+    },
+    "inputs": {
+      "default": "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    },
+    "badges": {
+      "default": "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+      "priority_high": "border-transparent bg-red-500 text-white hover:bg-red-600",
+      "priority_medium": "border-transparent bg-orange-500 text-white hover:bg-orange-600",
+      "priority_low": "border-transparent bg-blue-500 text-white hover:bg-blue-600"
+    }
+  },
+  "assets": {
+    "images": {
+      "login_bg": "https://images.unsplash.com/photo-1762075314840-df83c48bbde8?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "public_display_bg": "https://images.unsplash.com/photo-1765238358559-81dd5b57c094?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "user_avatar_placeholder": "https://images.unsplash.com/photo-1758270705641-acf09b68a91f?crop=entropy&cs=srgb&fm=jpg&q=85"
+    },
+    "icons": {
+      "library": "lucide-react",
+      "preferred": ["Users", "Ticket", "Monitor", "Settings", "LogOut", "Printer", "Bell", "Clock", "CheckCircle", "AlertTriangle"]
+    }
+  },
+  "motion": {
+    "transitions": "transition-all duration-200 ease-in-out",
+    "animations": {
+      "fade_in": "animate-in fade-in duration-300",
+      "slide_in_right": "animate-in slide-in-from-right duration-300",
+      "pulse_ticket": "animate-pulse"
+    }
+  },
+  "accessibility": {
+    "rules": [
+      "All interactive elements must have aria-labels if no text is present.",
+      "Focus rings must be visible (ring-2 ring-offset-2).",
+      "Color alone must not convey meaning (use icons + text).",
+      "Public display must have high contrast (White on Dark Blue/Black)."
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Use 'Manrope' for all headings. Import it from Google Fonts.",
+    "Use 'JetBrains Mono' for all ticket numbers (e.g., A-001).",
+    "Implement the 'Public Display' in Dark Mode by default.",
+    "Use the UNAD colors strictly: Primary #005883, Secondary #F47920.",
+    "For the Kiosk, ensure buttons are massive and touch-friendly.",
+    "Use 'sonner' for all toast notifications.",
+    "Ensure the 'Ticket Printing' logic is modular (mocked for web, but ready for ESC/POS).",
+    "Use 'recharts' for the Admin Dashboard reports."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not use generic gradients. Use solid colors or subtle textures.",
+    "Avoid 'AI Slop' (generic centered layouts). Use grids and asymmetry.",
+    "Add 'data-testid' to all interactive elements.",
+    "Use 'lucide-react' for icons.",
+    "Ensure all forms use 'react-hook-form' and 'zod'."
+  ]
+}
