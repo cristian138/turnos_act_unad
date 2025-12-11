@@ -553,7 +553,7 @@ async def redirigir_turno(datos: TurnoRedirigir, usuario: Usuario = Depends(requ
 @api_router.get("/turnos/llamados-recientes", response_model=List[Turno])
 async def obtener_turnos_llamados_recientes():
     turnos = await db.turnos.find(
-        {"estado": {"$in": ["llamado", "cerrado"]}},
+        {"estado": {"$in": ["llamado", "atendiendo", "finalizado"]}},
         {"_id": 0}
     ).sort("fecha_llamado", -1).limit(10).to_list(10)
     
