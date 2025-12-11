@@ -140,7 +140,7 @@ const FuncionarioDashboard = () => {
         </div>
 
         <div className="col-span-8">
-          <Card className="p-8">
+          <Card className="p-8 bg-white border-2 border-slate-200">
             <h2 className="text-2xl font-heading font-bold text-slate-900 mb-6">Turno Actual</h2>
             
             {turnoActual ? (
