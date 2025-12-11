@@ -19,6 +19,14 @@ const VAPDashboard = () => {
   const [prioridades, setPrioridades] = useState([]);
   const [turnoGenerado, setTurnoGenerado] = useState(null);
   const [config, setConfig] = useState(null);
+  const [datosCliente, setDatosCliente] = useState({
+    tipo_documento: 'CC',
+    numero_documento: '',
+    nombre_completo: '',
+    telefono: '',
+    correo: '',
+    tipo_usuario: 'estudiante'
+  });
 
   useEffect(() => {
     cargarDatos();
