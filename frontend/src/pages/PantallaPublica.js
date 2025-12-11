@@ -43,9 +43,11 @@ const PantallaPublica = () => {
     <div className="min-h-screen bg-slate-900 text-white" data-testid="pantalla-publica">
       <div className="grid grid-cols-12 h-screen">
         <div className="col-span-8 flex flex-col p-8">
-          <div className="border-b border-slate-700 pb-6 mb-6">
-            <h1 className="text-4xl font-heading font-black text-white mb-2">UNAD</h1>
-            <p className="text-xl text-slate-300">Sistema de Gestión de Turnos</p>
+          <div className="border-b border-slate-700 pb-6 mb-6 flex items-center space-x-4">
+            <img src="/logo-unad.png" alt="UNAD Logo" className="h-20 drop-shadow-2xl" />
+            <div>
+              <p className="text-xl text-slate-300">Sistema de Gestión de Turnos</p>
+            </div>
           </div>
 
           {turnoActual && turnoActual.estado === 'llamado' ? (
