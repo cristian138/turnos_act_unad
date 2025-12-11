@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
 class UNADQueueAPITester:
-    def __init__(self, base_url="https://academia-queue.preview.emergentagent.com"):
+    def __init__(self, base_url="https://shiftmgr-2.preview.emergentagent.com"):
         self.base_url = base_url
         self.tokens = {}
         self.users = {}
