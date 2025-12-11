@@ -50,7 +50,21 @@ const FuncionarioDashboard = () => {
 
   useEffect(() => {
     cargarTurnos();
+    cargarDatos();
   }, []);
+
+  const cargarDatos = async () => {
+    try {
+      const [serviciosRes, configRes] = await Promise.all([
+        api.servicios.listar(),
+        api.configuracion.obtener()
+      ]);
+      setServicios(serviciosRes.data.filter(s => s.activo));
+      setPrioridades(configRes.data.prioridades || []);
+    } catch (error) {
+      console.error('Error al cargar datos:', error);
+    }
+  };
 
   useEffect(() => {
     if (socket) {
