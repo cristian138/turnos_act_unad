@@ -97,10 +97,13 @@ class Turno(BaseModel):
     servicio_nombre: str
     prioridad: Optional[str] = None
     estado: str
+    observaciones: Optional[str] = None
     funcionario_id: Optional[str] = None
     funcionario_nombre: Optional[str] = None
+    modulo: Optional[str] = None
     fecha_creacion: str
     fecha_llamado: Optional[str] = None
+    fecha_atencion: Optional[str] = None
     fecha_cierre: Optional[str] = None
     tiempo_espera: Optional[int] = None
     tiempo_atencion: Optional[int] = None
@@ -114,6 +117,7 @@ class Turno(BaseModel):
 class TurnoCreate(BaseModel):
     servicio_id: str
     prioridad: Optional[str] = None
+    observaciones: Optional[str] = None
     tipo_documento: str
     numero_documento: str
     nombre_completo: str
