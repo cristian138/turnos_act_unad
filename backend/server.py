@@ -582,6 +582,7 @@ async def generar_reporte_atencion(
         ws.title = "Reporte de Atención"
         
         headers = ["Código", "Servicio", "Prioridad", "Estado", "Funcionario", 
+                   "Tipo Doc", "Num Doc", "Nombre Cliente", "Teléfono", "Correo", "Tipo Usuario",
                    "Fecha Creación", "Fecha Llamado", "Fecha Cierre", 
                    "Tiempo Espera (seg)", "Tiempo Atención (seg)"]
         ws.append(headers)
