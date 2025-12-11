@@ -216,7 +216,8 @@ const FuncionarioDashboard = () => {
         nombre_completo: '',
         telefono: '',
         correo: '',
-        tipo_usuario: 'estudiante'
+        tipo_usuario: 'estudiante',
+        observaciones: ''
       });
       
       cargarTurnos();
