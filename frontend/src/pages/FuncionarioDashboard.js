@@ -383,7 +383,15 @@ const FuncionarioDashboard = () => {
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-4">
           <Card className="p-6 bg-white border-2 border-slate-200">
-            <h2 className="text-xl font-heading font-bold text-slate-900 mb-4">Cola de Turnos</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-heading font-bold text-slate-900">Cola de Turnos</h2>
+              {turnos.length > 0 && (
+                <div className="flex items-center space-x-2 px-3 py-1 bg-primary/10 rounded-full">
+                  <Bell className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-bold text-primary">{turnos.length}</span>
+                </div>
+              )}
+            </div>
             <div className="space-y-2 max-h-[600px] overflow-y-auto">
               {Object.values(turnosPorServicio).map(({ nombre, turnos: turnosServicio }) => (
                 <div key={nombre} className="mb-4">
