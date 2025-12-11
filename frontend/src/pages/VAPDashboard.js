@@ -240,6 +240,18 @@ const VAPDashboard = () => {
             </Select>
           </div>
 
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-slate-900">Observaciones / Motivo de la Solicitud</label>
+            <textarea
+              value={datosCliente.observaciones}
+              onChange={(e) => setDatosCliente({...datosCliente, observaciones: e.target.value})}
+              placeholder="Ej: Solicita información sobre inscripciones para el período 2024-2..."
+              className="w-full h-20 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              data-testid="observaciones-input"
+            />
+            <p className="text-xs text-slate-500 mt-1">Describe brevemente el motivo de la consulta o solicitud</p>
+          </div>
+
           {clienteEncontrado && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center justify-between">
               <div className="flex items-center">
