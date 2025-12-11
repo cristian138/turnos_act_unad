@@ -268,6 +268,7 @@ const Usuarios = () => {
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Email</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Rol</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Módulo</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Servicios</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Estado</th>
                 <th className="px-6 py-3 text-right text-sm font-semibold text-slate-900">Acciones</th>
               </tr>
@@ -284,6 +285,22 @@ const Usuarios = () => {
                   </td>
                   <td className="px-6 py-4 text-sm text-slate-600">
                     {usuario.modulo || '-'}
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    {usuario.servicios_asignados && usuario.servicios_asignados.length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {usuario.servicios_asignados.map((servicioId) => {
+                          const servicio = servicios.find(s => s.id === servicioId);
+                          return servicio ? (
+                            <span key={servicioId} className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">
+                              {servicio.nombre}
+                            </span>
+                          ) : null;
+                        })}
+                      </div>
+                    ) : (
+                      <span className="text-slate-400">-</span>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     {usuario.activo ? (
