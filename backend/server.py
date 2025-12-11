@@ -46,6 +46,7 @@ class Usuario(BaseModel):
     rol: str
     activo: bool = True
     servicios_asignados: List[str] = []
+    modulo: Optional[str] = None
     fecha_creacion: str
 
 class UsuarioCreate(BaseModel):
@@ -54,6 +55,7 @@ class UsuarioCreate(BaseModel):
     password: str
     rol: str
     servicios_asignados: List[str] = []
+    modulo: Optional[str] = None
 
 class UsuarioUpdate(BaseModel):
     nombre: Optional[str] = None
@@ -62,6 +64,7 @@ class UsuarioUpdate(BaseModel):
     rol: Optional[str] = None
     activo: Optional[bool] = None
     servicios_asignados: Optional[List[str]] = None
+    modulo: Optional[str] = None
 
 class LoginRequest(BaseModel):
     email: EmailStr
