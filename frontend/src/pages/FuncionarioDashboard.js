@@ -356,6 +356,16 @@ const FuncionarioDashboard = () => {
                 </Select>
               </div>
 
+              <div>
+                <Label>Observaciones / Motivo de la Solicitud</Label>
+                <textarea
+                  value={datosCliente.observaciones}
+                  onChange={(e) => setDatosCliente({...datosCliente, observaciones: e.target.value})}
+                  placeholder="Ej: Solicita información sobre inscripciones..."
+                  className="w-full h-20 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                />
+              </div>
+
               <div className="border-t pt-4">
                 <div className="mb-4">
                   <Label>Servicio *</Label>
