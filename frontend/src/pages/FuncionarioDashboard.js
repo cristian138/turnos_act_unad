@@ -222,7 +222,7 @@ const FuncionarioDashboard = () => {
             )}
           </Card>
 
-          <Card className="p-6 mt-6">
+          <Card className="p-6 mt-6 bg-white border-2 border-slate-200">
             <h3 className="text-lg font-heading font-bold text-slate-900 mb-4">Información</h3>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
