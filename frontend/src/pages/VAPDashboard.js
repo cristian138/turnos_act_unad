@@ -117,7 +117,8 @@ const VAPDashboard = () => {
         nombre_completo: '',
         telefono: '',
         correo: '',
-        tipo_usuario: 'estudiante'
+        tipo_usuario: 'estudiante',
+        observaciones: ''
       });
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Error al generar turno');
