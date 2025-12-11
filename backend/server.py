@@ -402,7 +402,7 @@ async def generar_turno(datos: TurnoCreate, usuario: Usuario = Depends(obtener_u
 @api_router.get("/turnos/cola/{servicio_id}", response_model=List[Turno])
 async def obtener_cola_turnos(servicio_id: str, usuario: Usuario = Depends(obtener_usuario_actual)):
     turnos = await db.turnos.find(
-        {"servicio_id": servicio_id, "estado": "espera"},
+        {"servicio_id": servicio_id, "estado": "creado"},
         {"_id": 0}
     ).sort("fecha_creacion", 1).to_list(1000)
     
