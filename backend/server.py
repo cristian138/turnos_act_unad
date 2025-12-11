@@ -437,8 +437,8 @@ async def llamar_turno(datos: TurnoLlamar, usuario: Usuario = Depends(requerir_r
     if not turno:
         raise HTTPException(status_code=404, detail="Turno no encontrado")
     
-    if turno["estado"] != "espera":
-        raise HTTPException(status_code=400, detail="El turno no está en espera")
+    if turno["estado"] != "creado":
+        raise HTTPException(status_code=400, detail="El turno no está en estado creado")
     
     if usuario.rol == "funcionario" and turno["servicio_id"] not in usuario.servicios_asignados:
         raise HTTPException(status_code=403, detail="No tienes asignado este servicio")
@@ -451,6 +451,7 @@ async def llamar_turno(datos: TurnoLlamar, usuario: Usuario = Depends(requerir_r
         "estado": "llamado",
         "funcionario_id": usuario.id,
         "funcionario_nombre": usuario.nombre,
+        "modulo": datos.modulo or f"Módulo {usuario.nombre.split()[0]}",
         "fecha_llamado": fecha_llamado.isoformat(),
         "tiempo_espera": tiempo_espera
     }
@@ -460,6 +461,30 @@ async def llamar_turno(datos: TurnoLlamar, usuario: Usuario = Depends(requerir_r
     turno_actualizado = await db.turnos.find_one({"id": datos.turno_id}, {"_id": 0})
     
     await sio.emit('turno_llamado', turno_actualizado)
+    
+    return Turno(**turno_actualizado)
+
+@api_router.post("/turnos/atender", response_model=Turno)
+async def atender_turno(datos: TurnoAtender, usuario: Usuario = Depends(requerir_rol(["funcionario", "administrador"]))):
+    turno = await db.turnos.find_one({"id": datos.turno_id}, {"_id": 0})
+    if not turno:
+        raise HTTPException(status_code=404, detail="Turno no encontrado")
+    
+    if turno["estado"] != "llamado":
+        raise HTTPException(status_code=400, detail="El turno no está en estado llamado")
+    
+    fecha_atencion = datetime.now(timezone.utc)
+    
+    update_data = {
+        "estado": "atendiendo",
+        "fecha_atencion": fecha_atencion.isoformat()
+    }
+    
+    await db.turnos.update_one({"id": datos.turno_id}, {"$set": update_data})
+    
+    turno_actualizado = await db.turnos.find_one({"id": datos.turno_id}, {"_id": 0})
+    
+    await sio.emit('turno_atendiendo', turno_actualizado)
     
     return Turno(**turno_actualizado)
 
