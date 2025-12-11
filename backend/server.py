@@ -451,11 +451,14 @@ async def llamar_turno(datos: TurnoLlamar, usuario: Usuario = Depends(requerir_r
     fecha_creacion = datetime.fromisoformat(turno["fecha_creacion"])
     tiempo_espera = int((fecha_llamado - fecha_creacion).total_seconds())
     
+    # Usar el módulo del usuario si está asignado, sino usar el proporcionado o generar uno
+    modulo_asignado = usuario.modulo or datos.modulo or f"Módulo {usuario.nombre.split()[0]}"
+    
     update_data = {
         "estado": "llamado",
         "funcionario_id": usuario.id,
         "funcionario_nombre": usuario.nombre,
-        "modulo": datos.modulo or f"Módulo {usuario.nombre.split()[0]}",
+        "modulo": modulo_asignado,
         "fecha_llamado": fecha_llamado.isoformat(),
         "tiempo_espera": tiempo_espera
     }
