@@ -183,9 +183,13 @@ const VAPDashboard = () => {
               value={datosCliente.nombre_completo}
               onChange={(e) => setDatosCliente({...datosCliente, nombre_completo: e.target.value})}
               placeholder="Ej: Juan Pérez García"
-              className="h-12"
+              className={`h-12 ${clienteEncontrado ? 'bg-slate-100' : ''}`}
+              readOnly={clienteEncontrado}
               data-testid="nombre-completo-input"
             />
+            {clienteEncontrado && (
+              <p className="text-xs text-slate-500 mt-1">Datos cargados automáticamente</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -195,7 +199,8 @@ const VAPDashboard = () => {
                 value={datosCliente.telefono}
                 onChange={(e) => setDatosCliente({...datosCliente, telefono: e.target.value})}
                 placeholder="Ej: 3001234567"
-                className="h-12"
+                className={`h-12 ${clienteEncontrado ? 'bg-slate-100' : ''}`}
+                readOnly={clienteEncontrado}
                 data-testid="telefono-input"
               />
             </div>
@@ -207,7 +212,8 @@ const VAPDashboard = () => {
                 value={datosCliente.correo}
                 onChange={(e) => setDatosCliente({...datosCliente, correo: e.target.value})}
                 placeholder="correo@ejemplo.com"
-                className="h-12"
+                className={`h-12 ${clienteEncontrado ? 'bg-slate-100' : ''}`}
+                readOnly={clienteEncontrado}
                 data-testid="correo-input"
               />
             </div>
