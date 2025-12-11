@@ -85,7 +85,7 @@ const Reportes = () => {
         <p className="text-slate-600">Genera reportes de atención y estadísticas</p>
       </div>
 
-      <Card className="p-6 mb-6">
+      <Card className="p-6 mb-6 bg-white border-2 border-slate-200">
         <h2 className="text-xl font-heading font-bold text-slate-900 mb-4">Filtros de Reporte</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -155,7 +155,7 @@ const Reportes = () => {
       </Card>
 
       {reporteData && (
-        <Card className="p-6">
+        <Card className="p-6 bg-white border-2 border-slate-200">
           <h2 className="text-xl font-heading font-bold text-slate-900 mb-4">
             Resultados: {reporteData.total} turnos
           </h2>

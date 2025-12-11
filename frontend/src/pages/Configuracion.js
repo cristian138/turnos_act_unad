@@ -47,7 +47,7 @@ const Configuracion = () => {
       </div>
 
       <div className="max-w-2xl space-y-6">
-        <Card className="p-6">
+        <Card className="p-6 bg-white border-2 border-slate-200">
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-2">
@@ -66,7 +66,7 @@ const Configuracion = () => {
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-6 bg-white border-2 border-slate-200">
           <h3 className="text-lg font-semibold mb-4">Prioridades Configuradas</h3>
           <div className="space-y-2">
             {config.prioridades.map((prioridad, index) => (
