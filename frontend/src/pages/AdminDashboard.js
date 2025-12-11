@@ -81,7 +81,7 @@ const AdminDashboard = () => {
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.testId} className="p-6" data-testid={stat.testId}>
+            <Card key={stat.testId} className="p-6 border-2 border-slate-200 bg-white" data-testid={stat.testId}>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-slate-600 mb-1">{stat.title}</p>
