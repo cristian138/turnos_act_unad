@@ -104,7 +104,7 @@ const PantallaPublica = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white" data-testid="pantalla-publica">
+    <div className="min-h-screen !bg-slate-900 text-white" style={{backgroundColor: '#0f172a'}} data-testid="pantalla-publica">
       <div className="grid grid-cols-12 h-screen">
         <div className="col-span-8 flex flex-col p-8">
           <div className="border-b border-slate-700 pb-6 mb-6 flex items-center space-x-4">
