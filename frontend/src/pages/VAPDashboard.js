@@ -157,12 +157,21 @@ const VAPDashboard = () => {
             </div>
             
             <div>
-              <label className="block text-sm font-semibold mb-2 text-slate-900">Número de Documento *</label>
+              <label className="block text-sm font-semibold mb-2 text-slate-900">
+                Número de Documento * 
+                {buscandoCliente && <span className="text-primary ml-2 text-xs">Buscando...</span>}
+                {clienteEncontrado && <span className="text-green-600 ml-2 text-xs">✓ Cliente encontrado</span>}
+              </label>
               <Input
                 value={datosCliente.numero_documento}
-                onChange={(e) => setDatosCliente({...datosCliente, numero_documento: e.target.value})}
+                onChange={(e) => {
+                  const valor = e.target.value;
+                  setDatosCliente({...datosCliente, numero_documento: valor});
+                  setClienteEncontrado(false);
+                }}
+                onBlur={(e) => buscarClientePorDocumento(e.target.value)}
                 placeholder="Ej: 1234567890"
-                className="h-12"
+                className={`h-12 ${clienteEncontrado ? 'border-green-500 bg-green-50' : ''}`}
                 data-testid="numero-documento-input"
               />
             </div>
