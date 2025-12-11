@@ -97,12 +97,12 @@ const AdminDashboard = () => {
       </div>
 
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
+        <Card className="p-6 bg-white border-2 border-slate-200">
           <h2 className="text-xl font-heading font-bold text-primary mb-4">Actividad Reciente</h2>
           <p className="text-slate-600">Sistema de turnos en operación</p>
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-6 bg-white border-2 border-slate-200">
           <h2 className="text-xl font-heading font-bold text-primary mb-4">Accesos Rápidos</h2>
           <div className="space-y-2">
             <a href="/usuarios" className="block p-3 hover:bg-slate-50 rounded-md transition-colors">
