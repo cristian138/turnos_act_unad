@@ -87,7 +87,8 @@ const Usuarios = () => {
       email: usuario.email,
       password: '',
       rol: usuario.rol,
-      servicios_asignados: usuario.servicios_asignados || []
+      servicios_asignados: usuario.servicios_asignados || [],
+      modulo: usuario.modulo || ''
     });
     setModoEdicion(true);
     setDialogOpen(true);
