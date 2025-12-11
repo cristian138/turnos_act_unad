@@ -201,18 +201,55 @@ const Usuarios = () => {
                 </Select>
               </div>
               {formData.rol === 'funcionario' && (
-                <div>
-                  <Label>Módulo de Atención</Label>
-                  <Input
-                    value={formData.modulo}
-                    onChange={(e) => setFormData({ ...formData, modulo: e.target.value })}
-                    placeholder="Ej: Módulo 1, Ventanilla 3, etc."
-                    data-testid="usuario-modulo-input"
-                  />
-                  <p className="text-xs text-slate-500 mt-1">
-                    Este módulo se mostrará en la pantalla pública cuando llame un turno
-                  </p>
-                </div>
+                <>
+                  <div>
+                    <Label>Módulo de Atención</Label>
+                    <Input
+                      value={formData.modulo}
+                      onChange={(e) => setFormData({ ...formData, modulo: e.target.value })}
+                      placeholder="Ej: Módulo 1, Ventanilla 3, etc."
+                      data-testid="usuario-modulo-input"
+                    />
+                    <p className="text-xs text-slate-500 mt-1">
+                      Este módulo se mostrará en la pantalla pública cuando llame un turno
+                    </p>
+                  </div>
+                  <div>
+                    <Label>Servicios Asignados</Label>
+                    <div className="border rounded-md p-3 max-h-40 overflow-y-auto space-y-2">
+                      {servicios.length > 0 ? (
+                        servicios.map((servicio) => (
+                          <label key={servicio.id} className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={formData.servicios_asignados.includes(servicio.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setFormData({
+                                    ...formData,
+                                    servicios_asignados: [...formData.servicios_asignados, servicio.id]
+                                  });
+                                } else {
+                                  setFormData({
+                                    ...formData,
+                                    servicios_asignados: formData.servicios_asignados.filter(id => id !== servicio.id)
+                                  });
+                                }
+                              }}
+                              className="h-4 w-4 text-primary border-slate-300 rounded focus:ring-primary"
+                            />
+                            <span className="text-sm">{servicio.nombre}</span>
+                          </label>
+                        ))
+                      ) : (
+                        <p className="text-sm text-slate-500">No hay servicios disponibles</p>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Selecciona los servicios que este funcionario podrá atender
+                    </p>
+                  </div>
+                </>
               )}
               <Button type="submit" className="w-full" data-testid="guardar-usuario-button">
                 {modoEdicion ? 'Actualizar' : 'Crear'} Usuario
