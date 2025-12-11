@@ -547,6 +547,20 @@ async def actualizar_configuracion(
     config = await db.configuracion.find_one({}, {"_id": 0})
     return Configuracion(**config)
 
+@api_router.get("/clientes/buscar/{numero_documento}")
+async def buscar_cliente_por_documento(numero_documento: str):
+    turno_reciente = await db.turnos.find_one(
+        {"numero_documento": numero_documento},
+        {"_id": 0, "tipo_documento": 1, "numero_documento": 1, "nombre_completo": 1, 
+         "telefono": 1, "correo": 1, "tipo_usuario": 1},
+        sort=[("fecha_creacion", -1)]
+    )
+    
+    if not turno_reciente:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+    
+    return turno_reciente
+
 @api_router.get("/reportes/atencion")
 async def generar_reporte_atencion(
     fecha_inicio: Optional[str] = None,
