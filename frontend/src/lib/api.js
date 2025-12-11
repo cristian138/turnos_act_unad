@@ -26,6 +26,7 @@ export const api = {
     obtenerCola: (servicioId) => axios.get(`${API}/turnos/cola/${servicioId}`, { headers: getAuthHeaders() }),
     obtenerTodos: () => axios.get(`${API}/turnos/todos`, { headers: getAuthHeaders() }),
     llamar: (data) => axios.post(`${API}/turnos/llamar`, data, { headers: getAuthHeaders() }),
+    atender: (data) => axios.post(`${API}/turnos/atender`, data, { headers: getAuthHeaders() }),
     cerrar: (data) => axios.post(`${API}/turnos/cerrar`, data, { headers: getAuthHeaders() }),
     redirigir: (data) => axios.post(`${API}/turnos/redirigir`, data, { headers: getAuthHeaders() }),
     obtenerLlamadosRecientes: () => axios.get(`${API}/turnos/llamados-recientes`)
