@@ -35,6 +35,11 @@ const VAPDashboard = () => {
 
   useEffect(() => {
     cargarDatos();
+    cargarTurnosHoy();
+    
+    // Actualizar cada 30 segundos
+    const interval = setInterval(cargarTurnosHoy, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const cargarDatos = async () => {
@@ -48,6 +53,15 @@ const VAPDashboard = () => {
       setPrioridades(configRes.data.prioridades || []);
     } catch (error) {
       toast.error('Error al cargar datos');
+    }
+  };
+
+  const cargarTurnosHoy = async () => {
+    try {
+      const response = await api.turnos.obtenerListaCompleta();
+      setTurnosHoy(response.data);
+    } catch (error) {
+      console.error('Error al cargar turnos:', error);
     }
   };
 
