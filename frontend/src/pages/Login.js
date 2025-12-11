@@ -35,12 +35,12 @@ const Login = () => {
       <div
         className="hidden lg:flex lg:w-1/2 bg-cover bg-center relative"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1762075314840-df83c48bbde8?crop=entropy&cs=srgb&fm=jpg&q=85')`
+          backgroundImage: `url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?crop=entropy&cs=srgb&fm=jpg&q=85')`
         }}
       >
-        <div className="absolute inset-0 bg-primary/80 flex items-center justify-center">
+        <div className="absolute inset-0 bg-primary/85 flex items-center justify-center">
           <div className="text-white text-center px-8">
-            <h1 className="text-5xl font-heading font-black mb-4">UNAD</h1>
+            <img src="/logo-unad.png" alt="UNAD Logo" className="h-32 mx-auto mb-6 drop-shadow-2xl" />
             <p className="text-2xl font-heading font-bold mb-2">Sistema de Gestión de Turnos</p>
             <p className="text-lg opacity-90">Eficiencia y transparencia en la atención</p>
           </div>
