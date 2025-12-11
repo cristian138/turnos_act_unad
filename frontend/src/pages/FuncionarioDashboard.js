@@ -493,69 +493,101 @@ const FuncionarioDashboard = () => {
                   </div>
                 </div>
 
-                <div className="flex space-x-3 justify-center flex-wrap gap-2">
-                  <Button
-                    onClick={handleRellamar}
-                    variant="outline"
-                    size="lg"
-                    data-testid="rellamar-button"
-                  >
-                    <PhoneCall className="mr-2 h-5 w-5" />
-                    Rellamar
-                  </Button>
-                  
-                  <Dialog open={dialogRedirigir} onOpenChange={setDialogRedirigir}>
-                    <DialogTrigger asChild>
+                {/* Estado: llamado */}
+                {turnoActual.estado === 'llamado' && (
+                  <div className="space-y-4">
+                    <div className="bg-accent/10 border-2 border-accent rounded-lg p-4 mb-4">
+                      <p className="text-center text-accent font-semibold text-lg">
+                        🔔 Turno llamado - Cliente debe acercarse al módulo
+                      </p>
+                    </div>
+                    <div className="flex space-x-3 justify-center flex-wrap gap-2">
                       <Button
+                        onClick={handleRellamar}
                         variant="outline"
                         size="lg"
-                        data-testid="redirigir-button"
+                        data-testid="rellamar-button"
                       >
-                        <ArrowRightLeft className="mr-2 h-5 w-5" />
-                        Redirigir
+                        <PhoneCall className="mr-2 h-5 w-5" />
+                        Rellamar
                       </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Redirigir Turno</DialogTitle>
-                        <DialogDescription>
-                          Selecciona el servicio al que deseas redirigir el turno {turnoActual?.codigo}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <div>
-                          <Label>Servicio de Destino</Label>
-                          <Select value={servicioRedirigir} onValueChange={setServicioRedirigir}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecciona un servicio" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {servicios
-                                .filter(s => s.id !== turnoActual?.servicio_id)
-                                .map(s => (
-                                  <SelectItem key={s.id} value={s.id}>{s.nombre}</SelectItem>
-                                ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <Button onClick={handleRedirigir} className="w-full">
-                          <ArrowRightLeft className="mr-2 h-4 w-4" />
-                          Confirmar Redirección
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                      
+                      <Button
+                        onClick={handleAtender}
+                        size="lg"
+                        className="bg-primary hover:bg-primary/90"
+                        data-testid="atender-button"
+                      >
+                        <CheckCircle className="mr-2 h-5 w-5" />
+                        Cliente Presente - Atender
+                      </Button>
+                    </div>
+                  </div>
+                )}
 
-                  <Button
-                    onClick={handleCerrar}
-                    size="lg"
-                    className="bg-green-600 hover:bg-green-700"
-                    data-testid="cerrar-turno-button"
-                  >
-                    <CheckCircle className="mr-2 h-5 w-5" />
-                    Cerrar Turno
-                  </Button>
-                </div>
+                {/* Estado: atendiendo */}
+                {turnoActual.estado === 'atendiendo' && (
+                  <div className="space-y-4">
+                    <div className="bg-primary/10 border-2 border-primary rounded-lg p-4 mb-4">
+                      <p className="text-center text-primary font-semibold text-lg">
+                        ✅ Cliente en atención - {turnoActual.modulo}
+                      </p>
+                    </div>
+                    <div className="flex space-x-3 justify-center flex-wrap gap-2">
+                      <Dialog open={dialogRedirigir} onOpenChange={setDialogRedirigir}>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            data-testid="redirigir-button"
+                          >
+                            <ArrowRightLeft className="mr-2 h-5 w-5" />
+                            Redirigir
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Redirigir Turno</DialogTitle>
+                            <DialogDescription>
+                              Selecciona el servicio al que deseas redirigir el turno {turnoActual?.codigo}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4 py-4">
+                            <div>
+                              <Label>Servicio de Destino</Label>
+                              <Select value={servicioRedirigir} onValueChange={setServicioRedirigir}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecciona un servicio" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {servicios
+                                    .filter(s => s.id !== turnoActual?.servicio_id)
+                                    .map(s => (
+                                      <SelectItem key={s.id} value={s.id}>{s.nombre}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <Button onClick={handleRedirigir} className="w-full">
+                              <ArrowRightLeft className="mr-2 h-4 w-4" />
+                              Confirmar Redirección
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+
+                      <Button
+                        onClick={handleCerrar}
+                        size="lg"
+                        className="bg-green-600 hover:bg-green-700"
+                        data-testid="finalizar-turno-button"
+                      >
+                        <CheckCircle className="mr-2 h-5 w-5" />
+                        Finalizar Turno
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-center py-12">
