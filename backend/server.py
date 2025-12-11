@@ -433,7 +433,15 @@ async def obtener_todos_turnos(usuario: Usuario = Depends(obtener_usuario_actual
             {"_id": 0}
         ).sort("fecha_creacion", 1).to_list(1000)
     
-    return [Turno(**t) for t in turnos]
+    # Ordenar turnos por prioridad
+    turnos_ordenados = []
+    for turno in turnos:
+        if turno.get("prioridad"):
+            turnos_ordenados.insert(0, turno)
+        else:
+            turnos_ordenados.append(turno)
+    
+    return [Turno(**t) for t in turnos_ordenados]
 
 @api_router.post("/turnos/llamar", response_model=Turno)
 async def llamar_turno(datos: TurnoLlamar, usuario: Usuario = Depends(requerir_rol(["funcionario", "administrador"]))):
