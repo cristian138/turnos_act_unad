@@ -170,6 +170,63 @@ const FuncionarioDashboard = () => {
     }
   };
 
+  const handleGenerarTurno = async () => {
+    if (!formGenerar.servicio_id || !datosCliente.numero_documento || 
+        !datosCliente.nombre_completo || !datosCliente.telefono || !datosCliente.correo) {
+      toast.error('Completa todos los datos requeridos');
+      return;
+    }
+
+    try {
+      const response = await api.turnos.generar({
+        servicio_id: formGenerar.servicio_id,
+        prioridad: formGenerar.prioridad || null,
+        ...datosCliente
+      });
+
+      toast.success(`Turno ${response.data.codigo} generado exitosamente`);
+      setDialogGenerar(false);
+      
+      // Reset form
+      setFormGenerar({ servicio_id: '', prioridad: '' });
+      setDatosCliente({
+        tipo_documento: 'CC',
+        numero_documento: '',
+        nombre_completo: '',
+        telefono: '',
+        correo: '',
+        tipo_usuario: 'estudiante'
+      });
+      
+      cargarTurnos();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Error al generar turno');
+    }
+  };
+
+  const handleRedirigir = async () => {
+    if (!turnoActual || !servicioRedirigir) {
+      toast.error('Selecciona un servicio de destino');
+      return;
+    }
+
+    try {
+      await api.turnos.redirigir({
+        turno_id: turnoActual.id,
+        nuevo_servicio_id: servicioRedirigir
+      });
+
+      const servicioNombre = servicios.find(s => s.id === servicioRedirigir)?.nombre;
+      toast.success(`Turno ${turnoActual.codigo} redirigido a ${servicioNombre}`);
+      setDialogRedirigir(false);
+      setServicioRedirigir('');
+      setTurnoActual(null);
+      cargarTurnos();
+    } catch (error) {
+      toast.error('Error al redireccionar turno');
+    }
+  };
+
   const turnosPorServicio = usuario?.servicios_asignados?.reduce((acc, servicioId) => {
     const turnosServicio = turnos.filter(t => t.servicio_id === servicioId);
     if (turnosServicio.length > 0) {
