@@ -52,10 +52,16 @@ const VAPDashboard = () => {
       return;
     }
 
+    if (!datosCliente.numero_documento || !datosCliente.nombre_completo || !datosCliente.telefono || !datosCliente.correo) {
+      toast.error('Completa todos los datos del cliente');
+      return;
+    }
+
     try {
       const response = await api.turnos.generar({
         servicio_id: servicioSeleccionado,
-        prioridad: prioridad || null
+        prioridad: prioridad || null,
+        ...datosCliente
       });
 
       setTurnoGenerado(response.data);
@@ -67,8 +73,16 @@ const VAPDashboard = () => {
 
       setServicioSeleccionado('');
       setPrioridad('');
+      setDatosCliente({
+        tipo_documento: 'CC',
+        numero_documento: '',
+        nombre_completo: '',
+        telefono: '',
+        correo: '',
+        tipo_usuario: 'estudiante'
+      });
     } catch (error) {
-      toast.error('Error al generar turno');
+      toast.error(error.response?.data?.detail || 'Error al generar turno');
     }
   };
 
