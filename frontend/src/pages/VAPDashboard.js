@@ -100,32 +100,118 @@ const VAPDashboard = () => {
 
       <Card className="p-8 bg-white">
         <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold mb-2 text-slate-900">Tipo de Documento</label>
+              <Select 
+                value={datosCliente.tipo_documento} 
+                onValueChange={(val) => setDatosCliente({...datosCliente, tipo_documento: val})}
+              >
+                <SelectTrigger className="h-12" data-testid="tipo-documento-select">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="CC">Cédula de Ciudadanía</SelectItem>
+                  <SelectItem value="CE">Cédula de Extranjería</SelectItem>
+                  <SelectItem value="TI">Tarjeta de Identidad</SelectItem>
+                  <SelectItem value="PAS">Pasaporte</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-semibold mb-2 text-slate-900">Número de Documento *</label>
+              <Input
+                value={datosCliente.numero_documento}
+                onChange={(e) => setDatosCliente({...datosCliente, numero_documento: e.target.value})}
+                placeholder="Ej: 1234567890"
+                className="h-12"
+                data-testid="numero-documento-input"
+              />
+            </div>
+          </div>
+
           <div>
-            <label className="block text-lg font-semibold mb-3 text-slate-900">Selecciona el Servicio</label>
-            <Select value={servicioSeleccionado} onValueChange={setServicioSeleccionado}>
-              <SelectTrigger className="h-16 text-lg" data-testid="servicio-select">
-                <SelectValue placeholder="Selecciona un servicio" />
+            <label className="block text-sm font-semibold mb-2 text-slate-900">Nombre Completo *</label>
+            <Input
+              value={datosCliente.nombre_completo}
+              onChange={(e) => setDatosCliente({...datosCliente, nombre_completo: e.target.value})}
+              placeholder="Ej: Juan Pérez García"
+              className="h-12"
+              data-testid="nombre-completo-input"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold mb-2 text-slate-900">Teléfono *</label>
+              <Input
+                value={datosCliente.telefono}
+                onChange={(e) => setDatosCliente({...datosCliente, telefono: e.target.value})}
+                placeholder="Ej: 3001234567"
+                className="h-12"
+                data-testid="telefono-input"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-semibold mb-2 text-slate-900">Correo Electrónico *</label>
+              <Input
+                type="email"
+                value={datosCliente.correo}
+                onChange={(e) => setDatosCliente({...datosCliente, correo: e.target.value})}
+                placeholder="correo@ejemplo.com"
+                className="h-12"
+                data-testid="correo-input"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-slate-900">Tipo de Usuario</label>
+            <Select 
+              value={datosCliente.tipo_usuario} 
+              onValueChange={(val) => setDatosCliente({...datosCliente, tipo_usuario: val})}
+            >
+              <SelectTrigger className="h-12" data-testid="tipo-usuario-select">
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {servicios.map(s => (
-                  <SelectItem key={s.id} value={s.id} className="text-lg py-3">
-                    {s.nombre}
-                  </SelectItem>
-                ))}
+                <SelectItem value="aspirante">Aspirante</SelectItem>
+                <SelectItem value="estudiante">Estudiante</SelectItem>
+                <SelectItem value="tercero">Tercero</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
+          <div className="border-t pt-4">
+            <div>
+              <label className="block text-lg font-semibold mb-3 text-slate-900">Servicio a Solicitar *</label>
+              <Select value={servicioSeleccionado} onValueChange={setServicioSeleccionado}>
+                <SelectTrigger className="h-14 text-base" data-testid="servicio-select">
+                  <SelectValue placeholder="Selecciona un servicio" />
+                </SelectTrigger>
+                <SelectContent>
+                  {servicios.map(s => (
+                    <SelectItem key={s.id} value={s.id} className="text-base py-3">
+                      {s.nombre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div>
-            <label className="block text-lg font-semibold mb-3 text-slate-900">Prioridad (Opcional)</label>
+            <label className="block text-sm font-semibold mb-2 text-slate-900">Prioridad (Opcional)</label>
             <Select value={prioridad || "ninguna"} onValueChange={(val) => setPrioridad(val === "ninguna" ? "" : val)}>
-              <SelectTrigger className="h-16 text-lg" data-testid="prioridad-select">
+              <SelectTrigger className="h-12" data-testid="prioridad-select">
                 <SelectValue placeholder="Sin prioridad" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ninguna" className="text-lg py-3">Sin prioridad</SelectItem>
+                <SelectItem value="ninguna">Sin prioridad</SelectItem>
                 {prioridades.map(p => (
-                  <SelectItem key={p} value={p} className="text-lg py-3">
+                  <SelectItem key={p} value={p}>
                     {p}
                   </SelectItem>
                 ))}
@@ -135,10 +221,10 @@ const VAPDashboard = () => {
 
           <Button
             onClick={handleGenerar}
-            className="w-full h-20 text-xl bg-primary"
+            className="w-full h-16 text-lg bg-primary"
             data-testid="generar-turno-button"
           >
-            <Ticket className="mr-3 h-8 w-8" />
+            <Ticket className="mr-3 h-6 w-6" />
             Generar Turno
           </Button>
         </div>
