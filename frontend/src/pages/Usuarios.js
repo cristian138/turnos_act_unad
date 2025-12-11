@@ -112,7 +112,8 @@ const Usuarios = () => {
       email: '',
       password: '',
       rol: 'funcionario',
-      servicios_asignados: []
+      servicios_asignados: [],
+      modulo: ''
     });
     setModoEdicion(false);
     setUsuarioSeleccionado(null);
