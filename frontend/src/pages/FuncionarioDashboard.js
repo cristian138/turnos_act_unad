@@ -144,8 +144,8 @@ const FuncionarioDashboard = () => {
             <h2 className="text-2xl font-heading font-bold text-slate-900 mb-6">Turno Actual</h2>
             
             {turnoActual ? (
-              <div className="text-center">
-                <div className="mb-8">
+              <div>
+                <div className="text-center mb-6">
                   <p className="text-slate-600 mb-2">Atendiendo</p>
                   <p className="font-mono text-6xl font-black text-primary mb-4">
                     {turnoActual.codigo}
@@ -157,6 +157,32 @@ const FuncionarioDashboard = () => {
                       <span className="text-red-600 font-semibold">{turnoActual.prioridad}</span>
                     </div>
                   )}
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-lg mb-6">
+                  <h3 className="text-lg font-semibold text-slate-900 mb-4">Información del Cliente</h3>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-slate-600 font-medium">Documento</p>
+                      <p className="text-slate-900 font-semibold">{turnoActual.tipo_documento} {turnoActual.numero_documento}</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-600 font-medium">Tipo de Usuario</p>
+                      <p className="text-slate-900 capitalize">{turnoActual.tipo_usuario}</p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-slate-600 font-medium">Nombre Completo</p>
+                      <p className="text-slate-900 font-semibold text-lg">{turnoActual.nombre_completo}</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-600 font-medium">Teléfono</p>
+                      <p className="text-slate-900">{turnoActual.telefono}</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-600 font-medium">Correo</p>
+                      <p className="text-slate-900">{turnoActual.correo}</p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex space-x-4 justify-center">
