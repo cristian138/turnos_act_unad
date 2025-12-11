@@ -420,12 +420,12 @@ async def obtener_todos_turnos(usuario: Usuario = Depends(obtener_usuario_actual
     if usuario.rol == "funcionario":
         servicios_ids = usuario.servicios_asignados
         turnos = await db.turnos.find(
-            {"servicio_id": {"$in": servicios_ids}, "estado": "espera"},
+            {"servicio_id": {"$in": servicios_ids}, "estado": "creado"},
             {"_id": 0}
         ).sort("fecha_creacion", 1).to_list(1000)
     else:
         turnos = await db.turnos.find(
-            {"estado": "espera"},
+            {"estado": "creado"},
             {"_id": 0}
         ).sort("fecha_creacion", 1).to_list(1000)
     
