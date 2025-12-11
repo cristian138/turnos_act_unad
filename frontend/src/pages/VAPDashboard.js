@@ -76,10 +76,10 @@ const VAPDashboard = () => {
         <p className="text-lg text-slate-600">Ventanilla de Atención Presencial</p>
       </div>
 
-      <Card className="p-8">
+      <Card className="p-8 bg-white">
         <div className="space-y-6">
           <div>
-            <label className="block text-lg font-semibold mb-3">Selecciona el Servicio</label>
+            <label className="block text-lg font-semibold mb-3 text-slate-900">Selecciona el Servicio</label>
             <Select value={servicioSeleccionado} onValueChange={setServicioSeleccionado}>
               <SelectTrigger className="h-16 text-lg" data-testid="servicio-select">
                 <SelectValue placeholder="Selecciona un servicio" />
