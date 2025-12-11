@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { toast } from 'sonner';
-import { Ticket, Printer, CheckCircle } from 'lucide-react';
+import { Ticket, Printer, CheckCircle, Clock, PhoneCall, UserCheck, XCircle, RefreshCw } from 'lucide-react';
 
 const VAPDashboard = () => {
   const [servicios, setServicios] = useState([]);
@@ -20,6 +20,7 @@ const VAPDashboard = () => {
   const [prioridades, setPrioridades] = useState([]);
   const [turnoGenerado, setTurnoGenerado] = useState(null);
   const [config, setConfig] = useState(null);
+  const [turnosHoy, setTurnosHoy] = useState([]);
   const [datosCliente, setDatosCliente] = useState({
     tipo_documento: 'CC',
     numero_documento: '',
