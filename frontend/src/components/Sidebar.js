@@ -36,8 +36,7 @@ const Sidebar = () => {
       { icon: FileText, label: 'Reportes', path: '/reportes' }
     ],
     vap: [
-      { icon: Ticket, label: 'Generar Turno', path: '/dashboard' },
-      { icon: Monitor, label: 'Cerrar Turnos', path: '/cerrar-turnos' }
+      { icon: Ticket, label: 'Generar Turno', path: '/dashboard' }
     ]
   };
 
