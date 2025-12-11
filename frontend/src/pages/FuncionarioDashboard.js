@@ -68,8 +68,28 @@ const FuncionarioDashboard = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('turno_generado', () => {
+      socket.on('turno_generado', (turno) => {
+        const cantidadAnterior = turnos.length;
         cargarTurnos();
+        
+        // Verificar si el turno es para los servicios del funcionario
+        if (usuario?.servicios_asignados?.includes(turno.servicio_id)) {
+          toast.info(
+            `Nuevo turno ${turno.codigo} en ${turno.servicio_nombre}`,
+            {
+              icon: <Bell className="h-4 w-4" />,
+              duration: 5000
+            }
+          );
+          
+          // Notificación sonora (opcional)
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('Nuevo Turno Disponible', {
+              body: `${turno.codigo} - ${turno.servicio_nombre}`,
+              icon: '/logo-unad.png'
+            });
+          }
+        }
       });
 
       socket.on('turno_cerrado', () => {
@@ -81,7 +101,7 @@ const FuncionarioDashboard = () => {
         socket.off('turno_cerrado');
       };
     }
-  }, [socket]);
+  }, [socket, turnos, usuario]);
 
   const cargarTurnos = async () => {
     try {
