@@ -200,7 +200,7 @@ sudo certbot --nginx -d tu-dominio.com -d www.tu-dominio.com
 ```bash
 curl -X POST https://tu-dominio.com/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin@unad.edu.co","password":"admin123"}'
+  -d '{"email":"admin@unad.edu.co","password":"admin123"}'
 ```
 
 ### Probar WebSocket
