@@ -200,6 +200,20 @@ const Usuarios = () => {
                   </SelectContent>
                 </Select>
               </div>
+              {formData.rol === 'funcionario' && (
+                <div>
+                  <Label>Módulo de Atención</Label>
+                  <Input
+                    value={formData.modulo}
+                    onChange={(e) => setFormData({ ...formData, modulo: e.target.value })}
+                    placeholder="Ej: Módulo 1, Ventanilla 3, etc."
+                    data-testid="usuario-modulo-input"
+                  />
+                  <p className="text-xs text-slate-500 mt-1">
+                    Este módulo se mostrará en la pantalla pública cuando llame un turno
+                  </p>
+                </div>
+              )}
               <Button type="submit" className="w-full" data-testid="guardar-usuario-button">
                 {modoEdicion ? 'Actualizar' : 'Crear'} Usuario
               </Button>
