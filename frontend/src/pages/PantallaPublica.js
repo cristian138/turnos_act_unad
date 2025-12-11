@@ -60,14 +60,36 @@ const PantallaPublica = () => {
     if (socket) {
       socket.on('turno_llamado', (turno) => {
         setTurnoActual(turno);
+        iniciarSonidoRepetitivo(); // Iniciar sonido cuando se llama
+        cargarTurnosLlamados();
+      });
+
+      socket.on('turno_atendiendo', (turno) => {
+        setTurnoActual(turno);
+        detenerSonido(); // Detener sonido cuando pasa a atender
+        cargarTurnosLlamados();
+      });
+
+      socket.on('turno_finalizado', () => {
+        detenerSonido();
         cargarTurnosLlamados();
       });
 
       return () => {
         socket.off('turno_llamado');
+        socket.off('turno_atendiendo');
+        socket.off('turno_finalizado');
+        detenerSonido();
       };
     }
   }, [socket]);
+
+  // Limpiar intervalo al desmontar
+  useEffect(() => {
+    return () => {
+      detenerSonido();
+    };
+  }, []);
 
   const cargarTurnosLlamados = async () => {
     try {
