@@ -164,7 +164,7 @@ async def obtener_usuario_actual(credentials: HTTPAuthorizationCredentials = Dep
         raise credentials_exception
     return Usuario(**usuario)
 
-async def requerir_rol(roles_permitidos: List[str]):
+def requerir_rol(roles_permitidos: List[str]):
     async def verificar_rol(usuario: Usuario = Depends(obtener_usuario_actual)):
         if usuario.rol not in roles_permitidos:
             raise HTTPException(
