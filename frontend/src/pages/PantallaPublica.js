@@ -114,17 +114,43 @@ const PantallaPublica = () => {
             </div>
           </div>
 
-          {turnoActual && turnoActual.estado === 'llamado' ? (
+          {turnoActual && (turnoActual.estado === 'llamado' || turnoActual.estado === 'atendiendo') ? (
             <div className="flex-1 flex flex-col items-center justify-center animate-in fade-in duration-500">
-              <p className="text-3xl text-slate-400 mb-4">Turno Actual</p>
-              <p className="font-mono text-9xl font-black text-primary mb-6 animate-pulse">
-                {turnoActual.codigo}
-              </p>
-              <p className="text-4xl text-white mb-4">{turnoActual.servicio_nombre}</p>
-              {turnoActual.funcionario_nombre && (
-                <p className="text-2xl text-slate-400">
-                  Atención: {turnoActual.funcionario_nombre}
-                </p>
+              {turnoActual.estado === 'llamado' && (
+                <>
+                  <p className="text-4xl text-accent mb-4 animate-pulse font-bold">
+                    🔔 LLAMANDO TURNO
+                  </p>
+                  <p className="font-mono text-9xl font-black text-primary mb-6 animate-pulse">
+                    {turnoActual.codigo}
+                  </p>
+                  <p className="text-4xl text-white mb-4">{turnoActual.servicio_nombre}</p>
+                  <p className="text-3xl text-accent font-bold mb-2">
+                    Por favor acérquese a:
+                  </p>
+                  {turnoActual.modulo && (
+                    <p className="text-5xl text-white font-black bg-accent/20 px-8 py-4 rounded-lg">
+                      {turnoActual.modulo}
+                    </p>
+                  )}
+                </>
+              )}
+              
+              {turnoActual.estado === 'atendiendo' && (
+                <>
+                  <p className="text-3xl text-green-400 mb-4 font-bold">
+                    ✅ EN ATENCIÓN
+                  </p>
+                  <p className="font-mono text-8xl font-black text-white mb-6">
+                    {turnoActual.codigo}
+                  </p>
+                  <p className="text-3xl text-slate-300 mb-4">{turnoActual.servicio_nombre}</p>
+                  {turnoActual.modulo && (
+                    <p className="text-4xl text-white bg-primary/30 px-6 py-3 rounded-lg">
+                      {turnoActual.modulo}
+                    </p>
+                  )}
+                </>
               )}
             </div>
           ) : (
