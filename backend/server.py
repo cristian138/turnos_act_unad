@@ -372,7 +372,13 @@ async def generar_turno(datos: TurnoCreate, usuario: Usuario = Depends(obtener_u
         "fecha_llamado": None,
         "fecha_cierre": None,
         "tiempo_espera": None,
-        "tiempo_atencion": None
+        "tiempo_atencion": None,
+        "tipo_documento": datos.tipo_documento,
+        "numero_documento": datos.numero_documento,
+        "nombre_completo": datos.nombre_completo,
+        "telefono": datos.telefono,
+        "correo": datos.correo,
+        "tipo_usuario": datos.tipo_usuario
     }
     
     await db.turnos.insert_one(turno_doc)
