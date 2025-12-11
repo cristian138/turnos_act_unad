@@ -44,7 +44,7 @@ const AdminDashboard = () => {
       title: 'Usuarios Activos',
       value: stats.usuarios,
       icon: Users,
-      color: 'bg-blue-500',
+      color: 'bg-primary',
       testId: 'stat-usuarios'
     },
     {
@@ -65,7 +65,7 @@ const AdminDashboard = () => {
       title: 'En Espera',
       value: stats.turnosEspera,
       icon: Clock,
-      color: 'bg-green-500',
+      color: 'bg-green-600',
       testId: 'stat-en-espera'
     }
   ];
