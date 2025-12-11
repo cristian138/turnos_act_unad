@@ -143,12 +143,32 @@ const FuncionarioDashboard = () => {
     const siguienteTurno = turnosDisponibles[0];
 
     try {
-      const response = await api.turnos.llamar({ turno_id: siguienteTurno.id });
+      const response = await api.turnos.llamar({ 
+        turno_id: siguienteTurno.id,
+        modulo: `Módulo ${usuario.nombre.split(' ')[0]}`
+      });
       setTurnoActual(response.data);
       toast.success(`Turno ${response.data.codigo} llamado`);
       cargarTurnos();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Error al llamar turno');
+    }
+  };
+
+  const handleAtender = async () => {
+    if (!turnoActual) return;
+    
+    if (turnoActual.estado !== 'llamado') {
+      toast.error('El turno debe estar en estado llamado');
+      return;
+    }
+
+    try {
+      const response = await api.turnos.atender({ turno_id: turnoActual.id });
+      setTurnoActual(response.data);
+      toast.success('Turno en atención');
+    } catch (error) {
+      toast.error('Error al atender turno');
     }
   };
 
