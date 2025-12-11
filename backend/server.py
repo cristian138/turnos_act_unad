@@ -443,6 +443,52 @@ async def obtener_todos_turnos(usuario: Usuario = Depends(obtener_usuario_actual
     
     return [Turno(**t) for t in turnos_ordenados]
 
+@api_router.get("/turnos/lista-completa", response_model=List[Turno])
+async def obtener_lista_completa_turnos(usuario: Usuario = Depends(obtener_usuario_actual)):
+    """Obtiene todos los turnos del día con todos los estados (para VAP y Admin)"""
+    if usuario.rol not in ["vap", "administrador"]:
+        raise HTTPException(status_code=403, detail="No tienes permisos para ver esta lista")
+    
+    # Obtener turnos de hoy
+    hoy = datetime.now(timezone.utc).date().isoformat()
+    
+    turnos = await db.turnos.find(
+        {},
+        {"_id": 0}
+    ).sort("fecha_creacion", -1).to_list(1000)
+    
+    # Filtrar solo los de hoy
+    turnos_hoy = [t for t in turnos if t.get("fecha_creacion", "").startswith(hoy)]
+    
+    return [Turno(**t) for t in turnos_hoy]
+
+@api_router.post("/turnos/cancelar", response_model=Turno)
+async def cancelar_turno_pendiente(datos: TurnoCerrar, usuario: Usuario = Depends(requerir_rol(["administrador"]))):
+    """Permite al administrador cancelar/cerrar turnos que están pendientes (estado creado)"""
+    turno = await db.turnos.find_one({"id": datos.turno_id}, {"_id": 0})
+    if not turno:
+        raise HTTPException(status_code=404, detail="Turno no encontrado")
+    
+    if turno["estado"] != "creado":
+        raise HTTPException(status_code=400, detail="Solo se pueden cancelar turnos en estado pendiente (creado)")
+    
+    fecha_cierre = datetime.now(timezone.utc)
+    
+    update_data = {
+        "estado": "cancelado",
+        "fecha_cierre": fecha_cierre.isoformat(),
+        "funcionario_id": usuario.id,
+        "funcionario_nombre": f"Cancelado por: {usuario.nombre}"
+    }
+    
+    await db.turnos.update_one({"id": datos.turno_id}, {"$set": update_data})
+    
+    turno_actualizado = await db.turnos.find_one({"id": datos.turno_id}, {"_id": 0})
+    
+    await sio.emit('turno_cancelado', turno_actualizado)
+    
+    return Turno(**turno_actualizado)
+
 @api_router.post("/turnos/llamar", response_model=Turno)
 async def llamar_turno(datos: TurnoLlamar, usuario: Usuario = Depends(requerir_rol(["funcionario", "administrador"]))):
     turno = await db.turnos.find_one({"id": datos.turno_id}, {"_id": 0})
