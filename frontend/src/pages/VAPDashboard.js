@@ -95,7 +95,7 @@ const VAPDashboard = () => {
           </div>
 
           <div>
-            <label className="block text-lg font-semibold mb-3">Prioridad (Opcional)</label>
+            <label className="block text-lg font-semibold mb-3 text-slate-900">Prioridad (Opcional)</label>
             <Select value={prioridad || "ninguna"} onValueChange={(val) => setPrioridad(val === "ninguna" ? "" : val)}>
               <SelectTrigger className="h-16 text-lg" data-testid="prioridad-select">
                 <SelectValue placeholder="Sin prioridad" />
