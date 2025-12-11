@@ -497,18 +497,21 @@ async def cerrar_turno(datos: TurnoCerrar, usuario: Usuario = Depends(obtener_us
     if not turno:
         raise HTTPException(status_code=404, detail="Turno no encontrado")
     
-    if turno["estado"] == "cerrado":
-        raise HTTPException(status_code=400, detail="El turno ya está cerrado")
+    if turno["estado"] == "finalizado":
+        raise HTTPException(status_code=400, detail="El turno ya está finalizado")
     
     fecha_cierre = datetime.now(timezone.utc)
     
     tiempo_atencion = None
-    if turno.get("fecha_llamado"):
+    if turno.get("fecha_atencion"):
+        fecha_atencion = datetime.fromisoformat(turno["fecha_atencion"])
+        tiempo_atencion = int((fecha_cierre - fecha_atencion).total_seconds())
+    elif turno.get("fecha_llamado"):
         fecha_llamado = datetime.fromisoformat(turno["fecha_llamado"])
         tiempo_atencion = int((fecha_cierre - fecha_llamado).total_seconds())
     
     update_data = {
-        "estado": "cerrado",
+        "estado": "finalizado",
         "fecha_cierre": fecha_cierre.isoformat(),
         "tiempo_atencion": tiempo_atencion
     }
@@ -517,7 +520,7 @@ async def cerrar_turno(datos: TurnoCerrar, usuario: Usuario = Depends(obtener_us
     
     turno_actualizado = await db.turnos.find_one({"id": datos.turno_id}, {"_id": 0})
     
-    await sio.emit('turno_cerrado', turno_actualizado)
+    await sio.emit('turno_finalizado', turno_actualizado)
     
     return Turno(**turno_actualizado)
 
