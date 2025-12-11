@@ -109,14 +109,14 @@ const Reportes = () => {
           <div>
             <Label>Servicio (Opcional)</Label>
             <Select
-              value={filtros.servicio_id}
-              onValueChange={(value) => setFiltros({ ...filtros, servicio_id: value })}
+              value={filtros.servicio_id || "todos"}
+              onValueChange={(value) => setFiltros({ ...filtros, servicio_id: value === "todos" ? "" : value })}
             >
               <SelectTrigger data-testid="servicio-select">
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="todos">Todos</SelectItem>
                 {servicios.map(s => (
                   <SelectItem key={s.id} value={s.id}>{s.nombre}</SelectItem>
                 ))}
