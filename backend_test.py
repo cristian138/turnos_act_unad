@@ -213,7 +213,15 @@ class UNADQueueAPITester:
             
             if service_id:
                 # Generate turno without priority
-                turno_data = {"servicio_id": service_id}
+                turno_data = {
+                    "servicio_id": service_id,
+                    "tipo_documento": "CC",
+                    "numero_documento": "12345678",
+                    "nombre_completo": "María García López",
+                    "telefono": "3001234567",
+                    "correo": "maria.garcia@unad.edu.co",
+                    "tipo_usuario": "Estudiante"
+                }
                 success, response = self.make_request('POST', 'turnos/generar', turno_data, vap_token, 200)
                 if success:
                     turno_id = response.get('id')
@@ -223,7 +231,17 @@ class UNADQueueAPITester:
                     self.log_test("Generate turno (no priority)", False, f"Failed: {response}")
 
                 # Generate turno with priority
-                turno_data_priority = {"servicio_id": service_id, "prioridad": "Discapacidad"}
+                turno_data_priority = {
+                    "servicio_id": service_id,
+                    "prioridad": "Discapacidad",
+                    "tipo_documento": "CC",
+                    "numero_documento": "87654321",
+                    "nombre_completo": "Carlos Rodríguez Pérez",
+                    "telefono": "3109876543",
+                    "correo": "carlos.rodriguez@unad.edu.co",
+                    "tipo_usuario": "Docente",
+                    "observaciones": "Requiere atención prioritaria"
+                }
                 success, response = self.make_request('POST', 'turnos/generar', turno_data_priority, vap_token, 200)
                 if success:
                     priority_turno_id = response.get('id')
