@@ -146,6 +146,70 @@ const AdminDashboard = () => {
           </div>
         </Card>
       </div>
+
+      {/* Turnos Pendientes con opción de cancelar */}
+      <Card className="p-6 mt-6 bg-white border-2 border-slate-200">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-heading font-bold text-primary">Turnos Pendientes</h2>
+          <Button variant="outline" size="sm" onClick={cargarTurnosPendientes}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Actualizar
+          </Button>
+        </div>
+        
+        {turnosPendientes.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-slate-50">
+                  <th className="text-left p-3 font-semibold">Código</th>
+                  <th className="text-left p-3 font-semibold">Cliente</th>
+                  <th className="text-left p-3 font-semibold">Servicio</th>
+                  <th className="text-left p-3 font-semibold">Prioridad</th>
+                  <th className="text-left p-3 font-semibold">Hora</th>
+                  <th className="text-center p-3 font-semibold">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {turnosPendientes.map((turno) => (
+                  <tr key={turno.id} className="border-b hover:bg-slate-50">
+                    <td className="p-3 font-mono font-bold">{turno.codigo}</td>
+                    <td className="p-3">
+                      <p className="font-medium">{turno.nombre_completo}</p>
+                      <p className="text-xs text-slate-500">{turno.numero_documento}</p>
+                    </td>
+                    <td className="p-3">{turno.servicio_nombre}</td>
+                    <td className="p-3">
+                      {turno.prioridad ? (
+                        <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">
+                          {turno.prioridad}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">-</span>
+                      )}
+                    </td>
+                    <td className="p-3 text-slate-500">
+                      {new Date(turno.fecha_creacion).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td className="p-3 text-center">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleCancelarTurno(turno.id, turno.codigo)}
+                      >
+                        <XCircle className="h-4 w-4 mr-1" />
+                        Cancelar
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-center text-slate-500 py-8">No hay turnos pendientes</p>
+        )}
+      </Card>
     </div>
   );
 };
