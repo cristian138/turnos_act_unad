@@ -628,7 +628,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-socket_app = socketio.ASGIApp(sio, app)
+socket_app = socketio.ASGIApp(
+    sio,
+    other_asgi_app=app,
+    socketio_path='socket.io'
+)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
@@ -636,4 +640,4 @@ async def shutdown_db_client():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("server:socket_app", host="0.0.0.0", port=8001, reload=True)
+    uvicorn.run(socket_app, host="0.0.0.0", port=8001, reload=True)
