@@ -4,8 +4,25 @@ import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from '../components/ui/dialog';
 import { toast } from 'sonner';
-import { PhoneCall, PhoneForwarded, CheckCircle, AlertCircle } from 'lucide-react';
+import { PhoneCall, PhoneForwarded, CheckCircle, AlertCircle, Plus, Bell, ArrowRightLeft } from 'lucide-react';
 
 const FuncionarioDashboard = () => {
   const [turnos, setTurnos] = useState([]);
