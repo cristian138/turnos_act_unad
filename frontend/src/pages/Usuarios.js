@@ -230,6 +230,7 @@ const Usuarios = () => {
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Nombre</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Email</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Rol</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Módulo</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Estado</th>
                 <th className="px-6 py-3 text-right text-sm font-semibold text-slate-900">Acciones</th>
               </tr>
@@ -243,6 +244,9 @@ const Usuarios = () => {
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getRolBadgeColor(usuario.rol)}`}>
                       {usuario.rol}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-600">
+                    {usuario.modulo || '-'}
                   </td>
                   <td className="px-6 py-4">
                     {usuario.activo ? (
