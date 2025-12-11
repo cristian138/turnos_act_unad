@@ -104,10 +104,22 @@ class Turno(BaseModel):
     fecha_cierre: Optional[str] = None
     tiempo_espera: Optional[int] = None
     tiempo_atencion: Optional[int] = None
+    tipo_documento: str
+    numero_documento: str
+    nombre_completo: str
+    telefono: str
+    correo: EmailStr
+    tipo_usuario: str
 
 class TurnoCreate(BaseModel):
     servicio_id: str
     prioridad: Optional[str] = None
+    tipo_documento: str
+    numero_documento: str
+    nombre_completo: str
+    telefono: str
+    correo: EmailStr
+    tipo_usuario: str
 
 class TurnoLlamar(BaseModel):
     turno_id: str
