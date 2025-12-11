@@ -26,7 +26,8 @@ const VAPDashboard = () => {
     nombre_completo: '',
     telefono: '',
     correo: '',
-    tipo_usuario: 'estudiante'
+    tipo_usuario: 'estudiante',
+    observaciones: ''
   });
   const [clienteEncontrado, setClienteEncontrado] = useState(false);
   const [buscandoCliente, setBuscandoCliente] = useState(false);
