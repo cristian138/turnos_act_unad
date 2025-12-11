@@ -96,12 +96,12 @@ const VAPDashboard = () => {
 
           <div>
             <label className="block text-lg font-semibold mb-3">Prioridad (Opcional)</label>
-            <Select value={prioridad} onValueChange={setPrioridad}>
+            <Select value={prioridad || "ninguna"} onValueChange={(val) => setPrioridad(val === "ninguna" ? "" : val)}>
               <SelectTrigger className="h-16 text-lg" data-testid="prioridad-select">
                 <SelectValue placeholder="Sin prioridad" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="" className="text-lg py-3">Sin prioridad</SelectItem>
+                <SelectItem value="ninguna" className="text-lg py-3">Sin prioridad</SelectItem>
                 {prioridades.map(p => (
                   <SelectItem key={p} value={p} className="text-lg py-3">
                     {p}
