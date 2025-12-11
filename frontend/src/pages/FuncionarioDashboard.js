@@ -484,6 +484,12 @@ const FuncionarioDashboard = () => {
                       <p className="text-slate-600 font-medium">Correo</p>
                       <p className="text-slate-900">{turnoActual.correo}</p>
                     </div>
+                    {turnoActual.observaciones && (
+                      <div className="col-span-2 pt-4 border-t">
+                        <p className="text-slate-600 font-medium mb-2">Observaciones / Motivo de la Solicitud</p>
+                        <p className="text-slate-900 text-base bg-white p-3 rounded border border-slate-200">{turnoActual.observaciones}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
