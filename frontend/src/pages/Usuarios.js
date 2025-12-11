@@ -33,7 +33,8 @@ const Usuarios = () => {
     email: '',
     password: '',
     rol: 'funcionario',
-    servicios_asignados: []
+    servicios_asignados: [],
+    modulo: ''
   });
 
   useEffect(() => {
