@@ -29,6 +29,24 @@ const FuncionarioDashboard = () => {
   const [turnoActual, setTurnoActual] = useState(null);
   const { socket } = useSocket();
   const { usuario } = useAuth();
+  const [dialogGenerar, setDialogGenerar] = useState(false);
+  const [dialogRedirigir, setDialogRedirigir] = useState(false);
+  const [servicios, setServicios] = useState([]);
+  const [prioridades, setPrioridades] = useState([]);
+  const [turnosAnteriores, setTurnosAnteriores] = useState(0);
+  const [datosCliente, setDatosCliente] = useState({
+    tipo_documento: 'CC',
+    numero_documento: '',
+    nombre_completo: '',
+    telefono: '',
+    correo: '',
+    tipo_usuario: 'estudiante'
+  });
+  const [formGenerar, setFormGenerar] = useState({
+    servicio_id: '',
+    prioridad: ''
+  });
+  const [servicioRedirigir, setServicioRedirigir] = useState('');
 
   useEffect(() => {
     cargarTurnos();
