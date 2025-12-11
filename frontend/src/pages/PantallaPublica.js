@@ -6,6 +6,48 @@ const PantallaPublica = () => {
   const [turnosLlamados, setTurnosLlamados] = useState([]);
   const [turnoActual, setTurnoActual] = useState(null);
   const { socket } = useSocket();
+  const audioContextRef = useRef(null);
+  const [sonando, setSonando] = useState(false);
+  const intervaloSonidoRef = useRef(null);
+
+  // Función para reproducir sonido de notificación
+  const reproducirSonido = () => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    
+    const context = audioContextRef.current;
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+    
+    oscillator.frequency.value = 800; // Frecuencia del tono
+    oscillator.type = 'sine'; // Tipo de onda
+    
+    gainNode.gain.setValueAtTime(0.3, context.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.3);
+    
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + 0.3);
+  };
+
+  const iniciarSonidoRepetitivo = () => {
+    setSonando(true);
+    reproducirSonido();
+    intervaloSonidoRef.current = setInterval(() => {
+      reproducirSonido();
+    }, 2000); // Repetir cada 2 segundos
+  };
+
+  const detenerSonido = () => {
+    setSonando(false);
+    if (intervaloSonidoRef.current) {
+      clearInterval(intervaloSonidoRef.current);
+      intervaloSonidoRef.current = null;
+    }
+  };
 
   useEffect(() => {
     cargarTurnosLlamados();
