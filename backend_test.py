@@ -264,20 +264,49 @@ class UNADQueueAPITester:
                 success, response = self.make_request('GET', f'turnos/cola/{service_id}', token=funcionario_token)
                 self.log_test("List service queue", success, f"Retrieved queue for service")
 
-        # Test calling and closing turnos
+        # Test complete turno lifecycle (creado -> llamado -> atendiendo -> finalizado)
         if self.turnos and 'funcionario' in self.tokens:
             funcionario_token = self.tokens['funcionario']
             turno = self.turnos[0]
             
-            # Call turno
-            call_data = {"turno_id": turno['id']}
+            # Step 1: Call turno (creado -> llamado)
+            call_data = {"turno_id": turno['id'], "modulo": "Módulo 1"}
             success, response = self.make_request('POST', 'turnos/llamar', call_data, funcionario_token)
-            self.log_test("Call turno", success, f"Called turno: {turno.get('codigo')}")
-            
-            # Close turno
-            close_data = {"turno_id": turno['id']}
-            success, response = self.make_request('POST', 'turnos/cerrar', close_data, funcionario_token)
-            self.log_test("Close turno", success, f"Closed turno: {turno.get('codigo')}")
+            if success and response.get('estado') == 'llamado':
+                self.log_test("Call turno (creado -> llamado)", True, f"Called turno: {turno.get('codigo')}, Estado: {response.get('estado')}")
+                
+                # Step 2: Attend turno (llamado -> atendiendo)
+                attend_data = {"turno_id": turno['id']}
+                success, response = self.make_request('POST', 'turnos/atender', attend_data, funcionario_token)
+                if success and response.get('estado') == 'atendiendo':
+                    self.log_test("Attend turno (llamado -> atendiendo)", True, f"Attending turno: {turno.get('codigo')}, Estado: {response.get('estado')}")
+                    
+                    # Step 3: Finalize turno (atendiendo -> finalizado)
+                    finalize_data = {"turno_id": turno['id']}
+                    success, response = self.make_request('POST', 'turnos/cerrar', finalize_data, funcionario_token)
+                    if success and response.get('estado') == 'finalizado':
+                        self.log_test("Finalize turno (atendiendo -> finalizado)", True, f"Finalized turno: {turno.get('codigo')}, Estado: {response.get('estado')}")
+                    else:
+                        self.log_test("Finalize turno (atendiendo -> finalizado)", False, f"Failed to finalize: {response}")
+                else:
+                    self.log_test("Attend turno (llamado -> atendiendo)", False, f"Failed to attend: {response}")
+            else:
+                self.log_test("Call turno (creado -> llamado)", False, f"Failed to call: {response}")
+                
+            # Test with second turno if available for additional lifecycle testing
+            if len(self.turnos) > 1:
+                turno2 = self.turnos[1]
+                
+                # Test direct close from llamado state (skip atender)
+                call_data2 = {"turno_id": turno2['id'], "modulo": "Módulo 2"}
+                success, response = self.make_request('POST', 'turnos/llamar', call_data2, funcionario_token)
+                if success:
+                    # Close directly from llamado state
+                    close_data2 = {"turno_id": turno2['id']}
+                    success, response = self.make_request('POST', 'turnos/cerrar', close_data2, funcionario_token)
+                    self.log_test("Direct close from llamado", success, f"Closed turno directly from llamado: {turno2.get('codigo')}")
+                else:
+                    self.log_test("Setup for direct close test", False, f"Failed to call second turno: {response}")
 
         # Test recent called turnos (public endpoint)
         success, response = self.make_request('GET', 'turnos/llamados-recientes')
