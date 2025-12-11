@@ -34,6 +34,9 @@ export const api = {
     obtener: () => axios.get(`${API}/configuracion`, { headers: getAuthHeaders() }),
     actualizar: (data) => axios.put(`${API}/configuracion`, data, { headers: getAuthHeaders() })
   },
+  clientes: {
+    buscarPorDocumento: (numeroDocumento) => axios.get(`${API}/clientes/buscar/${numeroDocumento}`, { headers: getAuthHeaders() })
+  },
   reportes: {
     generarReporteAtencion: (params) => axios.get(`${API}/reportes/atencion`, {
       params,
