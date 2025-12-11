@@ -252,6 +252,7 @@ async def crear_usuario(datos: UsuarioCreate, usuario: Usuario = Depends(requeri
         "rol": datos.rol,
         "activo": True,
         "servicios_asignados": datos.servicios_asignados,
+        "modulo": datos.modulo,
         "fecha_creacion": datetime.now(timezone.utc).isoformat()
     }
     
