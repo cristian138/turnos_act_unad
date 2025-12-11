@@ -110,6 +110,9 @@ const Servicios = () => {
               <DialogTitle>
                 {modoEdicion ? 'Editar Servicio' : 'Nuevo Servicio'}
               </DialogTitle>
+              <DialogDescription>
+                {modoEdicion ? 'Modifica la información del servicio' : 'Define un nuevo servicio de atención'}
+              </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
