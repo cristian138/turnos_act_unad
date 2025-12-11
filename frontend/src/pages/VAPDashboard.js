@@ -224,8 +224,9 @@ const VAPDashboard = () => {
             <Select 
               value={datosCliente.tipo_usuario} 
               onValueChange={(val) => setDatosCliente({...datosCliente, tipo_usuario: val})}
+              disabled={clienteEncontrado}
             >
-              <SelectTrigger className="h-12" data-testid="tipo-usuario-select">
+              <SelectTrigger className={`h-12 ${clienteEncontrado ? 'bg-slate-100' : ''}`} data-testid="tipo-usuario-select">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -235,6 +236,29 @@ const VAPDashboard = () => {
               </SelectContent>
             </Select>
           </div>
+
+          {clienteEncontrado && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                <div>
+                  <p className="text-sm font-semibold text-green-900">Cliente Registrado</p>
+                  <p className="text-xs text-green-700">Los datos se cargaron automáticamente del último turno</p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setClienteEncontrado(false);
+                  toast.info('Ahora puedes editar los datos del cliente');
+                }}
+                data-testid="editar-datos-button"
+              >
+                Editar Datos
+              </Button>
+            </div>
+          )}
 
           <div className="border-t pt-4">
             <div>
