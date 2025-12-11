@@ -106,7 +106,20 @@ const FuncionarioDashboard = () => {
   const cargarTurnos = async () => {
     try {
       const response = await api.turnos.obtenerTodos();
-      setTurnos(response.data);
+      const nuevosTurnos = response.data;
+      
+      // Detectar incremento en turnos
+      if (nuevosTurnos.length > turnosAnteriores && turnosAnteriores > 0) {
+        const diferencia = nuevosTurnos.length - turnosAnteriores;
+        if (diferencia > 0) {
+          toast.success(`${diferencia} nuevo(s) turno(s) en cola`, {
+            icon: <Bell className="h-4 w-4" />
+          });
+        }
+      }
+      
+      setTurnos(nuevosTurnos);
+      setTurnosAnteriores(nuevosTurnos.length);
     } catch (error) {
       console.error('Error al cargar turnos:', error);
     }
