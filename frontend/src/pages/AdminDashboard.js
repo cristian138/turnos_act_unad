@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { Card } from '../components/ui/card';
-import { Users, Briefcase, Ticket, Clock } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Users, Briefcase, Ticket, Clock, XCircle, RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -10,9 +12,11 @@ const AdminDashboard = () => {
     turnosHoy: 0,
     turnosEspera: 0
   });
+  const [turnosPendientes, setTurnosPendientes] = useState([]);
 
   useEffect(() => {
     cargarEstadisticas();
+    cargarTurnosPendientes();
   }, []);
 
   const cargarEstadisticas = async () => {
@@ -32,10 +36,32 @@ const AdminDashboard = () => {
         usuarios: usuariosRes.data.length,
         servicios: serviciosRes.data.filter(s => s.activo).length,
         turnosHoy: turnosHoy.length,
-        turnosEspera: turnosRes.data.filter(t => t.estado === 'espera').length
+        turnosEspera: turnosRes.data.filter(t => t.estado === 'creado').length
       });
     } catch (error) {
       console.error('Error al cargar estadísticas:', error);
+    }
+  };
+
+  const cargarTurnosPendientes = async () => {
+    try {
+      const response = await api.turnos.obtenerTodos();
+      setTurnosPendientes(response.data.filter(t => t.estado === 'creado'));
+    } catch (error) {
+      console.error('Error al cargar turnos pendientes:', error);
+    }
+  };
+
+  const handleCancelarTurno = async (turnoId, codigo) => {
+    if (!window.confirm(`¿Estás seguro de cancelar el turno ${codigo}?`)) return;
+    
+    try {
+      await api.turnos.cancelar({ turno_id: turnoId });
+      toast.success(`Turno ${codigo} cancelado`);
+      cargarTurnosPendientes();
+      cargarEstadisticas();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Error al cancelar turno');
     }
   };
 
