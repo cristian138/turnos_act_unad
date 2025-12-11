@@ -127,6 +127,10 @@ class TurnoCreate(BaseModel):
 
 class TurnoLlamar(BaseModel):
     turno_id: str
+    modulo: Optional[str] = None
+
+class TurnoAtender(BaseModel):
+    turno_id: str
 
 class TurnoCerrar(BaseModel):
     turno_id: str
