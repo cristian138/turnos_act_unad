@@ -32,8 +32,8 @@ const Sidebar = () => {
       { icon: Settings, label: 'Configuración', path: '/configuracion' }
     ],
     funcionario: [
-      { icon: LayoutDashboard, label: 'Atención', path: '/dashboard' },
-      { icon: Ticket, label: 'Cola de Turnos', path: '/turnos' }
+      { icon: LayoutDashboard, label: 'Módulo de Atención', path: '/dashboard' },
+      { icon: FileText, label: 'Reportes', path: '/reportes' }
     ],
     vap: [
       { icon: Ticket, label: 'Generar Turno', path: '/dashboard' },
