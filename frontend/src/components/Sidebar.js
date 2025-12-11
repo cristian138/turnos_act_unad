@@ -45,9 +45,9 @@ const Sidebar = () => {
 
   return (
     <div className="w-64 bg-primary min-h-screen flex flex-col" data-testid="sidebar">
-      <div className="p-6 border-b border-primary-600">
-        <h1 className="text-white text-2xl font-heading font-black">UNAD</h1>
-        <p className="text-primary-100 text-sm">Gestión de Turnos</p>
+      <div className="p-6 border-b border-primary-600 bg-white">
+        <img src="/logo-unad.png" alt="UNAD Logo" className="h-16 w-auto" />
+        <p className="text-primary text-xs mt-2 font-semibold">Gestión de Turnos</p>
       </div>
 
       <div className="p-4 border-b border-primary-600">
