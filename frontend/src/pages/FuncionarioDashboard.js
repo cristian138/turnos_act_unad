@@ -240,9 +240,144 @@ const FuncionarioDashboard = () => {
 
   return (
     <div data-testid="funcionario-dashboard">
-      <div className="mb-8">
-        <h1 className="text-4xl font-heading font-bold text-primary mb-2">Módulo de Atención</h1>
-        <p className="text-slate-600">Gestiona la atención de turnos</p>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-4xl font-heading font-bold text-primary mb-2">Módulo de Atención</h1>
+          <p className="text-slate-600">Gestiona la atención de turnos</p>
+        </div>
+        <Dialog open={dialogGenerar} onOpenChange={setDialogGenerar}>
+          <DialogTrigger asChild>
+            <Button className="bg-secondary" data-testid="generar-turno-funcionario-button">
+              <Plus className="mr-2 h-4 w-4" />
+              Generar Nuevo Turno
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Generar Nuevo Turno</DialogTitle>
+              <DialogDescription>
+                Completa los datos del cliente para generar un nuevo turno
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Tipo de Documento</Label>
+                  <Select 
+                    value={datosCliente.tipo_documento} 
+                    onValueChange={(val) => setDatosCliente({...datosCliente, tipo_documento: val})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CC">Cédula de Ciudadanía</SelectItem>
+                      <SelectItem value="CE">Cédula de Extranjería</SelectItem>
+                      <SelectItem value="TI">Tarjeta de Identidad</SelectItem>
+                      <SelectItem value="PAS">Pasaporte</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Número de Documento *</Label>
+                  <Input
+                    value={datosCliente.numero_documento}
+                    onChange={(e) => setDatosCliente({...datosCliente, numero_documento: e.target.value})}
+                    placeholder="1234567890"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label>Nombre Completo *</Label>
+                <Input
+                  value={datosCliente.nombre_completo}
+                  onChange={(e) => setDatosCliente({...datosCliente, nombre_completo: e.target.value})}
+                  placeholder="Juan Pérez García"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Teléfono *</Label>
+                  <Input
+                    value={datosCliente.telefono}
+                    onChange={(e) => setDatosCliente({...datosCliente, telefono: e.target.value})}
+                    placeholder="3001234567"
+                  />
+                </div>
+                <div>
+                  <Label>Correo Electrónico *</Label>
+                  <Input
+                    type="email"
+                    value={datosCliente.correo}
+                    onChange={(e) => setDatosCliente({...datosCliente, correo: e.target.value})}
+                    placeholder="correo@ejemplo.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label>Tipo de Usuario</Label>
+                <Select 
+                  value={datosCliente.tipo_usuario} 
+                  onValueChange={(val) => setDatosCliente({...datosCliente, tipo_usuario: val})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="aspirante">Aspirante</SelectItem>
+                    <SelectItem value="estudiante">Estudiante</SelectItem>
+                    <SelectItem value="tercero">Tercero</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="border-t pt-4">
+                <div className="mb-4">
+                  <Label>Servicio *</Label>
+                  <Select 
+                    value={formGenerar.servicio_id} 
+                    onValueChange={(val) => setFormGenerar({...formGenerar, servicio_id: val})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona un servicio" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {servicios.map(s => (
+                        <SelectItem key={s.id} value={s.id}>{s.nombre}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label>Prioridad (Opcional)</Label>
+                  <Select 
+                    value={formGenerar.prioridad || "ninguna"} 
+                    onValueChange={(val) => setFormGenerar({...formGenerar, prioridad: val === "ninguna" ? "" : val})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sin prioridad" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ninguna">Sin prioridad</SelectItem>
+                      {prioridades.map(p => (
+                        <SelectItem key={p} value={p}>{p}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Button onClick={handleGenerarTurno} className="w-full bg-primary">
+                <Plus className="mr-2 h-4 w-4" />
+                Generar Turno
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="grid grid-cols-12 gap-6">
