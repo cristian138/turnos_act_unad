@@ -459,7 +459,7 @@ const FuncionarioDashboard = () => {
                   </div>
                 </div>
 
-                <div className="flex space-x-4 justify-center">
+                <div className="flex space-x-3 justify-center flex-wrap gap-2">
                   <Button
                     onClick={handleRellamar}
                     variant="outline"
@@ -469,6 +469,49 @@ const FuncionarioDashboard = () => {
                     <PhoneCall className="mr-2 h-5 w-5" />
                     Rellamar
                   </Button>
+                  
+                  <Dialog open={dialogRedirigir} onOpenChange={setDialogRedirigir}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        data-testid="redirigir-button"
+                      >
+                        <ArrowRightLeft className="mr-2 h-5 w-5" />
+                        Redirigir
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Redirigir Turno</DialogTitle>
+                        <DialogDescription>
+                          Selecciona el servicio al que deseas redirigir el turno {turnoActual?.codigo}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div>
+                          <Label>Servicio de Destino</Label>
+                          <Select value={servicioRedirigir} onValueChange={setServicioRedirigir}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecciona un servicio" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {servicios
+                                .filter(s => s.id !== turnoActual?.servicio_id)
+                                .map(s => (
+                                  <SelectItem key={s.id} value={s.id}>{s.nombre}</SelectItem>
+                                ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Button onClick={handleRedirigir} className="w-full">
+                          <ArrowRightLeft className="mr-2 h-4 w-4" />
+                          Confirmar Redirección
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
                   <Button
                     onClick={handleCerrar}
                     size="lg"
