@@ -392,6 +392,105 @@ const VAPDashboard = () => {
           )}
         </Card>
       )}
+
+      {/* Lista de Turnos del Día */}
+      <Card className="p-6 mt-6 bg-white border-2 border-slate-200">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-heading font-bold text-primary">Turnos del Día</h2>
+          <Button variant="outline" size="sm" onClick={cargarTurnosHoy}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Actualizar
+          </Button>
+        </div>
+        
+        {/* Resumen */}
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="bg-blue-50 p-4 rounded-lg text-center">
+            <Clock className="h-6 w-6 text-blue-600 mx-auto mb-2" />
+            <p className="text-2xl font-bold text-blue-600">
+              {turnosHoy.filter(t => t.estado === 'creado').length}
+            </p>
+            <p className="text-sm text-blue-700">Pendientes</p>
+          </div>
+          <div className="bg-orange-50 p-4 rounded-lg text-center">
+            <PhoneCall className="h-6 w-6 text-orange-600 mx-auto mb-2" />
+            <p className="text-2xl font-bold text-orange-600">
+              {turnosHoy.filter(t => t.estado === 'llamado').length}
+            </p>
+            <p className="text-sm text-orange-700">Llamados</p>
+          </div>
+          <div className="bg-purple-50 p-4 rounded-lg text-center">
+            <UserCheck className="h-6 w-6 text-purple-600 mx-auto mb-2" />
+            <p className="text-2xl font-bold text-purple-600">
+              {turnosHoy.filter(t => t.estado === 'atendiendo').length}
+            </p>
+            <p className="text-sm text-purple-700">En Atención</p>
+          </div>
+          <div className="bg-green-50 p-4 rounded-lg text-center">
+            <CheckCircle className="h-6 w-6 text-green-600 mx-auto mb-2" />
+            <p className="text-2xl font-bold text-green-600">
+              {turnosHoy.filter(t => t.estado === 'finalizado').length}
+            </p>
+            <p className="text-sm text-green-700">Finalizados</p>
+          </div>
+        </div>
+
+        {/* Tabla de turnos */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b bg-slate-50">
+                <th className="text-left p-3 font-semibold">Código</th>
+                <th className="text-left p-3 font-semibold">Cliente</th>
+                <th className="text-left p-3 font-semibold">Servicio</th>
+                <th className="text-left p-3 font-semibold">Estado</th>
+                <th className="text-left p-3 font-semibold">Módulo</th>
+                <th className="text-left p-3 font-semibold">Hora</th>
+              </tr>
+            </thead>
+            <tbody>
+              {turnosHoy.map((turno) => (
+                <tr key={turno.id} className="border-b hover:bg-slate-50">
+                  <td className="p-3 font-mono font-bold">{turno.codigo}</td>
+                  <td className="p-3">
+                    <p className="font-medium">{turno.nombre_completo}</p>
+                    <p className="text-xs text-slate-500">{turno.numero_documento}</p>
+                  </td>
+                  <td className="p-3">{turno.servicio_nombre}</td>
+                  <td className="p-3">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      turno.estado === 'creado' ? 'bg-blue-100 text-blue-700' :
+                      turno.estado === 'llamado' ? 'bg-orange-100 text-orange-700' :
+                      turno.estado === 'atendiendo' ? 'bg-purple-100 text-purple-700' :
+                      turno.estado === 'finalizado' ? 'bg-green-100 text-green-700' :
+                      turno.estado === 'cancelado' ? 'bg-red-100 text-red-700' :
+                      'bg-slate-100 text-slate-700'
+                    }`}>
+                      {turno.estado === 'creado' ? 'Pendiente' :
+                       turno.estado === 'llamado' ? 'Llamado' :
+                       turno.estado === 'atendiendo' ? 'En Atención' :
+                       turno.estado === 'finalizado' ? 'Finalizado' :
+                       turno.estado === 'cancelado' ? 'Cancelado' :
+                       turno.estado}
+                    </span>
+                  </td>
+                  <td className="p-3">{turno.modulo || '-'}</td>
+                  <td className="p-3 text-slate-500">
+                    {new Date(turno.fecha_creacion).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
+                  </td>
+                </tr>
+              ))}
+              {turnosHoy.length === 0 && (
+                <tr>
+                  <td colSpan="6" className="p-8 text-center text-slate-500">
+                    No hay turnos registrados hoy
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   );
 };
