@@ -28,6 +28,8 @@ const VAPDashboard = () => {
     correo: '',
     tipo_usuario: 'estudiante'
   });
+  const [clienteEncontrado, setClienteEncontrado] = useState(false);
+  const [buscandoCliente, setBuscandoCliente] = useState(false);
 
   useEffect(() => {
     cargarDatos();
