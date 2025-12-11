@@ -232,23 +232,53 @@ const VAPDashboard = () => {
       </Card>
 
       {turnoGenerado && (
-        <Card className="p-8 mt-6 text-center border-4 border-primary">
-          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <p className="text-xl text-slate-600 mb-2">Turno Generado</p>
-          <p className="font-mono text-7xl font-black text-primary mb-4">
-            {turnoGenerado.codigo}
-          </p>
-          <p className="text-2xl text-slate-700 mb-6">{turnoGenerado.servicio_nombre}</p>
-          {turnoGenerado.prioridad && (
-            <div className="inline-flex items-center px-6 py-3 bg-red-100 rounded-full mb-6">
-              <span className="text-red-600 text-xl font-semibold">{turnoGenerado.prioridad}</span>
+        <Card className="p-8 mt-6 border-4 border-primary">
+          <div className="text-center mb-6">
+            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+            <p className="text-xl text-slate-600 mb-2">Turno Generado Exitosamente</p>
+            <p className="font-mono text-7xl font-black text-primary mb-4">
+              {turnoGenerado.codigo}
+            </p>
+            <p className="text-2xl text-slate-700 mb-2">{turnoGenerado.servicio_nombre}</p>
+            {turnoGenerado.prioridad && (
+              <div className="inline-flex items-center px-6 py-3 bg-red-100 rounded-full mb-4">
+                <span className="text-red-600 text-xl font-semibold">{turnoGenerado.prioridad}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-slate-50 p-6 rounded-lg mb-6">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Datos del Cliente</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-slate-600 font-medium">Documento</p>
+                <p className="text-slate-900">{turnoGenerado.tipo_documento} {turnoGenerado.numero_documento}</p>
+              </div>
+              <div>
+                <p className="text-slate-600 font-medium">Nombre</p>
+                <p className="text-slate-900">{turnoGenerado.nombre_completo}</p>
+              </div>
+              <div>
+                <p className="text-slate-600 font-medium">Teléfono</p>
+                <p className="text-slate-900">{turnoGenerado.telefono}</p>
+              </div>
+              <div>
+                <p className="text-slate-600 font-medium">Correo</p>
+                <p className="text-slate-900">{turnoGenerado.correo}</p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-slate-600 font-medium">Tipo de Usuario</p>
+                <p className="text-slate-900 capitalize">{turnoGenerado.tipo_usuario}</p>
+              </div>
             </div>
-          )}
+          </div>
+
           {config?.impresion_habilitada && (
             <Button
               onClick={() => handleImprimir(turnoGenerado)}
               variant="outline"
               size="lg"
+              className="w-full"
               data-testid="reimprimir-button"
             >
               <Printer className="mr-2 h-5 w-5" />
