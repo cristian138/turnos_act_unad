@@ -131,7 +131,8 @@ const VAPDashboard = () => {
   return (
     <div data-testid="vap-dashboard" className="max-w-4xl mx-auto">
       <div className="mb-8 text-center">
-        <h1 className="text-5xl font-heading font-bold text-primary mb-2">Generar Turno</h1>
+        <img src="/logo-unad.png" alt="UNAD Logo" className="h-24 mx-auto mb-4" />
+        <h1 className="text-4xl font-heading font-bold text-primary mb-2">Generar Turno</h1>
         <p className="text-lg text-slate-600">Ventanilla de Atención Presencial</p>
       </div>
 
