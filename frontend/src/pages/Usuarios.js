@@ -146,6 +146,9 @@ const Usuarios = () => {
               <DialogTitle>
                 {modoEdicion ? 'Editar Usuario' : 'Nuevo Usuario'}
               </DialogTitle>
+              <DialogDescription>
+                {modoEdicion ? 'Modifica la información del usuario' : 'Completa el formulario para crear un nuevo usuario del sistema'}
+              </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
