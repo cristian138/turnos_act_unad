@@ -143,15 +143,18 @@ backend:
 
   - task: "Ciclo de vida de turnos (creado/llamado/atendido/finalizado)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado pero necesita prueba completa del ciclo"
+      - working: true
+        agent: "testing"
+        comment: "✅ CICLO COMPLETO VERIFICADO - Todas las transiciones funcionan correctamente: creado → llamado (POST /api/turnos/llamar) → atendiendo (POST /api/turnos/atender) → finalizado (POST /api/turnos/cerrar). Probado con usuarios reales y datos completos de cliente. Endpoints funcionando: GET /api/servicios, GET /api/usuarios, GET /api/turnos/todos, POST /api/turnos/generar. Login verificado para los 3 roles (admin@unad.edu.co, funcionario@unad.edu.co, vap@unad.edu.co). Sistema completamente funcional."
 
   - task: "WebSocket para actualizaciones en tiempo real"
     implemented: true
