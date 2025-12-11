@@ -136,7 +136,7 @@ const VAPDashboard = () => {
         <p className="text-lg text-slate-600">Ventanilla de Atención Presencial</p>
       </div>
 
-      <Card className="p-8 bg-white">
+      <Card className="p-8 bg-white border-2 border-primary/20">
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
