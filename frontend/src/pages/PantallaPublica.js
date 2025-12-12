@@ -194,13 +194,16 @@ const PantallaPublica = () => {
                         : 'bg-green-600 text-white'
                     }`}
                   >
-                    {turno.estado === 'llamado' ? 'En Atención' : 'Cerrado'}
+                    {turno.estado === 'llamado' ? 'Llamando' : turno.estado === 'atendiendo' ? 'En Atención' : 'Cerrado'}
                   </span>
                 </div>
+                {turno.nombre_completo && (
+                  <p className="text-sm text-white font-medium mb-1">{turno.nombre_completo}</p>
+                )}
                 <p className="text-sm text-slate-300">{turno.servicio_nombre}</p>
-                {turno.funcionario_nombre && (
-                  <p className="text-xs text-slate-400 mt-1">
-                    {turno.funcionario_nombre}
+                {turno.modulo && (
+                  <p className="text-xs text-accent mt-1 font-semibold">
+                    → {turno.modulo}
                   </p>
                 )}
               </div>
