@@ -337,11 +337,20 @@ const FuncionarioDashboard = () => {
                   </Select>
                 </div>
                 <div>
-                  <Label>Número de Documento *</Label>
+                  <Label>
+                    Número de Documento *
+                    {buscandoCliente && <span className="text-primary ml-2 text-xs">Buscando...</span>}
+                    {clienteEncontrado && <span className="text-green-600 ml-2 text-xs">✓ Cliente encontrado</span>}
+                  </Label>
                   <Input
                     value={datosCliente.numero_documento}
-                    onChange={(e) => setDatosCliente({...datosCliente, numero_documento: e.target.value})}
+                    onChange={(e) => {
+                      setDatosCliente({...datosCliente, numero_documento: e.target.value});
+                      setClienteEncontrado(false);
+                    }}
+                    onBlur={(e) => buscarClientePorDocumento(e.target.value)}
                     placeholder="1234567890"
+                    className={clienteEncontrado ? 'border-green-500 bg-green-50' : ''}
                   />
                 </div>
               </div>
