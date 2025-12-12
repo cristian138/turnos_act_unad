@@ -140,8 +140,7 @@ const VAPDashboard = () => {
     }
   };
 
-  const handleImprimir = (turno) => {
-    // Crear ventana de impresión con formato de ticket 58mm
+  const handleImprimir = async (turno) => {
     const servicioNombre = servicios.find(s => s.id === turno.servicio_id)?.nombre || turno.servicio_nombre || 'Servicio';
     const fecha = new Date(turno.fecha_creacion);
     const fechaFormateada = fecha.toLocaleDateString('es-CO', { 
@@ -154,111 +153,176 @@ const VAPDashboard = () => {
       minute: '2-digit' 
     });
 
+    // Intentar primero con el servicio local ESC-POS
+    const ticketData = {
+      codigo: turno.codigo,
+      servicio: servicioNombre,
+      cliente: turno.nombre_completo || 'Cliente',
+      prioridad: turno.prioridad || null,
+      fecha: fechaFormateada,
+      hora: horaFormateada
+    };
+
+    try {
+      // Intentar servicio local primero (puerto 9100)
+      const response = await fetch('http://localhost:9100/print', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ticketData)
+      });
+      
+      if (response.ok) {
+        toast.success('Ticket impreso correctamente (ESC-POS)');
+        return;
+      }
+    } catch (error) {
+      console.log('Servicio local no disponible, intentando WebUSB...');
+    }
+
+    // Intentar con WebUSB
+    if (navigator.usb) {
+      try {
+        await imprimirWebUSB(ticketData);
+        return;
+      } catch (error) {
+        console.log('WebUSB no disponible:', error);
+      }
+    }
+
+    // Fallback: Impresión por ventana del navegador
+    imprimirVentana(ticketData);
+  };
+
+  const imprimirWebUSB = async (ticketData) => {
+    try {
+      // Solicitar acceso al dispositivo USB
+      const device = await navigator.usb.requestDevice({
+        filters: [
+          { vendorId: 0x0483 }, // Xprinter común
+          { vendorId: 0x0416 }, // Otro ID común de Xprinter
+          { vendorId: 0x1504 }, // POS printer
+          { vendorId: 0x04B8 }, // Epson
+        ]
+      });
+
+      await device.open();
+      await device.selectConfiguration(1);
+      await device.claimInterface(0);
+
+      // Generar comandos ESC-POS
+      const comandos = generarComandosESCPOS(ticketData);
+      
+      // Encontrar el endpoint de salida
+      const endpointOut = device.configuration.interfaces[0].alternate.endpoints.find(
+        e => e.direction === 'out'
+      );
+
+      await device.transferOut(endpointOut.endpointNumber, comandos);
+      await device.close();
+
+      toast.success('Ticket impreso correctamente (WebUSB)');
+    } catch (error) {
+      if (error.name === 'NotFoundError') {
+        toast.error('No se encontró impresora. Conecta la impresora y vuelve a intentar.');
+      } else {
+        throw error;
+      }
+    }
+  };
+
+  const generarComandosESCPOS = (ticketData) => {
+    const ESC = 0x1B;
+    const GS = 0x1D;
+    const comandos = [];
+
+    // Función helper para agregar texto
+    const addText = (text) => {
+      const encoder = new TextEncoder();
+      comandos.push(...encoder.encode(text));
+    };
+
+    // Inicializar impresora
+    comandos.push(ESC, 0x40); // ESC @ - Initialize
+
+    // Centrar texto
+    comandos.push(ESC, 0x61, 0x01); // ESC a 1 - Center alignment
+
+    // Título UNAD
+    comandos.push(ESC, 0x21, 0x10); // Doble altura
+    addText('UNAD\n');
+    comandos.push(ESC, 0x21, 0x00); // Normal
+    addText('Sistema de Turnos\n');
+    addText('--------------------------------\n');
+
+    // Código del turno (grande)
+    comandos.push(GS, 0x21, 0x11); // Doble ancho y alto
+    comandos.push(ESC, 0x45, 0x01); // Negrita ON
+    addText(`\n${ticketData.codigo}\n\n`);
+    comandos.push(ESC, 0x45, 0x00); // Negrita OFF
+    comandos.push(GS, 0x21, 0x00); // Tamaño normal
+
+    // Servicio
+    comandos.push(ESC, 0x21, 0x08); // Negrita
+    addText(`${ticketData.servicio}\n`);
+    comandos.push(ESC, 0x21, 0x00); // Normal
+
+    // Prioridad si existe
+    if (ticketData.prioridad) {
+      comandos.push(GS, 0x42, 0x01); // Invertir colores
+      addText(` PRIORIDAD: ${ticketData.prioridad.toUpperCase()} \n`);
+      comandos.push(GS, 0x42, 0x00); // Normal
+    }
+
+    addText('--------------------------------\n');
+
+    // Cliente
+    addText(`${ticketData.cliente}\n`);
+    
+    // Fecha y hora
+    addText(`${ticketData.fecha} - ${ticketData.hora}\n`);
+    
+    addText('--------------------------------\n');
+    addText('Conserve este ticket\n');
+    addText('Espere a ser llamado\n');
+    addText('\n\n\n');
+
+    // Cortar papel
+    comandos.push(GS, 0x56, 0x00); // GS V 0 - Corte total
+
+    return new Uint8Array(comandos);
+  };
+
+  const imprimirVentana = (ticketData) => {
     const ticketHTML = `
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Ticket ${turno.codigo}</title>
+        <title>Ticket ${ticketData.codigo}</title>
         <style>
-          @page {
-            size: 58mm auto;
-            margin: 0;
-          }
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-          }
-          body {
-            font-family: 'Courier New', monospace;
-            width: 58mm;
-            padding: 2mm;
-            font-size: 12px;
-          }
-          .ticket {
-            text-align: center;
-          }
-          .logo {
-            width: 40mm;
-            height: auto;
-            margin-bottom: 2mm;
-          }
-          .titulo {
-            font-size: 10px;
-            font-weight: bold;
-            margin-bottom: 3mm;
-            border-bottom: 1px dashed #000;
-            padding-bottom: 2mm;
-          }
-          .codigo {
-            font-size: 36px;
-            font-weight: bold;
-            margin: 5mm 0;
-            letter-spacing: 2px;
-          }
-          .servicio {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 3mm;
-            padding: 2mm;
-            border: 1px solid #000;
-          }
-          .info {
-            font-size: 10px;
-            margin: 2mm 0;
-          }
-          .prioridad {
-            font-size: 12px;
-            font-weight: bold;
-            margin: 2mm 0;
-            padding: 1mm;
-            background: #000;
-            color: #fff;
-          }
-          .fecha {
-            font-size: 10px;
-            margin-top: 3mm;
-            border-top: 1px dashed #000;
-            padding-top: 2mm;
-          }
-          .footer {
-            font-size: 8px;
-            margin-top: 3mm;
-            border-top: 1px dashed #000;
-            padding-top: 2mm;
-          }
-          @media print {
-            body {
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
-            }
-          }
+          @page { size: 58mm auto; margin: 0; }
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Courier New', monospace; width: 58mm; padding: 2mm; font-size: 12px; }
+          .ticket { text-align: center; }
+          .logo { width: 40mm; height: auto; margin-bottom: 2mm; }
+          .titulo { font-size: 10px; font-weight: bold; margin-bottom: 3mm; border-bottom: 1px dashed #000; padding-bottom: 2mm; }
+          .codigo { font-size: 36px; font-weight: bold; margin: 5mm 0; letter-spacing: 2px; }
+          .servicio { font-size: 14px; font-weight: bold; margin-bottom: 3mm; padding: 2mm; border: 1px solid #000; }
+          .prioridad { font-size: 12px; font-weight: bold; margin: 2mm 0; padding: 1mm; background: #000; color: #fff; }
+          .fecha { font-size: 10px; margin-top: 3mm; border-top: 1px dashed #000; padding-top: 2mm; }
+          .footer { font-size: 8px; margin-top: 3mm; border-top: 1px dashed #000; padding-top: 2mm; }
         </style>
       </head>
       <body>
         <div class="ticket">
           <img src="${window.location.origin}/Logo_unad_color.png" class="logo" alt="UNAD" onerror="this.style.display='none'"/>
           <div class="titulo">SISTEMA DE TURNOS<br/>UNAD</div>
-          <div class="codigo">${turno.codigo}</div>
-          <div class="servicio">${servicioNombre}</div>
-          ${turno.prioridad ? `<div class="prioridad">⚠ PRIORIDAD: ${turno.prioridad.toUpperCase()}</div>` : ''}
-          <div class="info">
-            <strong>${turno.nombre_completo || 'Cliente'}</strong>
-          </div>
-          <div class="fecha">
-            ${fechaFormateada} - ${horaFormateada}
-          </div>
-          <div class="footer">
-            Conserve este ticket<br/>
-            Espere a ser llamado
-          </div>
+          <div class="codigo">${ticketData.codigo}</div>
+          <div class="servicio">${ticketData.servicio}</div>
+          ${ticketData.prioridad ? `<div class="prioridad">PRIORIDAD: ${ticketData.prioridad.toUpperCase()}</div>` : ''}
+          <div class="fecha">${ticketData.cliente}<br/>${ticketData.fecha} - ${ticketData.hora}</div>
+          <div class="footer">Conserve este ticket<br/>Espere a ser llamado</div>
         </div>
-        <script>
-          window.onload = function() {
-            window.print();
-            setTimeout(function() { window.close(); }, 500);
-          }
-        </script>
+        <script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }</script>
       </body>
       </html>
     `;
@@ -266,8 +330,7 @@ const VAPDashboard = () => {
     const ventanaImpresion = window.open('', '_blank', 'width=300,height=400');
     ventanaImpresion.document.write(ticketHTML);
     ventanaImpresion.document.close();
-    
-    toast.success('Ticket enviado a imprimir');
+    toast.info('Ticket enviado a imprimir');
   };
 
   return (
