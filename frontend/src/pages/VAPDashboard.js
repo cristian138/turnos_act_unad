@@ -141,8 +141,133 @@ const VAPDashboard = () => {
   };
 
   const handleImprimir = (turno) => {
-    toast.info('Imprimiendo ticket...');
-    console.log('Comando ESC-POS para:', turno.codigo);
+    // Crear ventana de impresión con formato de ticket 58mm
+    const servicioNombre = servicios.find(s => s.id === turno.servicio_id)?.nombre || turno.servicio_nombre || 'Servicio';
+    const fecha = new Date(turno.fecha_creacion);
+    const fechaFormateada = fecha.toLocaleDateString('es-CO', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    });
+    const horaFormateada = fecha.toLocaleTimeString('es-CO', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+
+    const ticketHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Ticket ${turno.codigo}</title>
+        <style>
+          @page {
+            size: 58mm auto;
+            margin: 0;
+          }
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          body {
+            font-family: 'Courier New', monospace;
+            width: 58mm;
+            padding: 2mm;
+            font-size: 12px;
+          }
+          .ticket {
+            text-align: center;
+          }
+          .logo {
+            width: 40mm;
+            height: auto;
+            margin-bottom: 2mm;
+          }
+          .titulo {
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 3mm;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 2mm;
+          }
+          .codigo {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 5mm 0;
+            letter-spacing: 2px;
+          }
+          .servicio {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3mm;
+            padding: 2mm;
+            border: 1px solid #000;
+          }
+          .info {
+            font-size: 10px;
+            margin: 2mm 0;
+          }
+          .prioridad {
+            font-size: 12px;
+            font-weight: bold;
+            margin: 2mm 0;
+            padding: 1mm;
+            background: #000;
+            color: #fff;
+          }
+          .fecha {
+            font-size: 10px;
+            margin-top: 3mm;
+            border-top: 1px dashed #000;
+            padding-top: 2mm;
+          }
+          .footer {
+            font-size: 8px;
+            margin-top: 3mm;
+            border-top: 1px dashed #000;
+            padding-top: 2mm;
+          }
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="ticket">
+          <img src="${window.location.origin}/Logo_unad_color.png" class="logo" alt="UNAD" onerror="this.style.display='none'"/>
+          <div class="titulo">SISTEMA DE TURNOS<br/>UNAD</div>
+          <div class="codigo">${turno.codigo}</div>
+          <div class="servicio">${servicioNombre}</div>
+          ${turno.prioridad ? `<div class="prioridad">⚠ PRIORIDAD: ${turno.prioridad.toUpperCase()}</div>` : ''}
+          <div class="info">
+            <strong>${turno.nombre_completo || 'Cliente'}</strong>
+          </div>
+          <div class="fecha">
+            ${fechaFormateada} - ${horaFormateada}
+          </div>
+          <div class="footer">
+            Conserve este ticket<br/>
+            Espere a ser llamado
+          </div>
+        </div>
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          }
+        </script>
+      </body>
+      </html>
+    `;
+
+    const ventanaImpresion = window.open('', '_blank', 'width=300,height=400');
+    ventanaImpresion.document.write(ticketHTML);
+    ventanaImpresion.document.close();
+    
+    toast.success('Ticket enviado a imprimir');
   };
 
   return (
