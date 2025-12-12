@@ -69,6 +69,40 @@ const FuncionarioDashboard = () => {
     }
   };
 
+  const buscarClientePorDocumento = async (numeroDocumento) => {
+    if (!numeroDocumento || numeroDocumento.length < 5) {
+      setClienteEncontrado(false);
+      return;
+    }
+
+    setBuscandoCliente(true);
+    try {
+      const response = await api.clientes.buscarPorDocumento(numeroDocumento);
+      const cliente = response.data;
+      
+      setDatosCliente({
+        ...datosCliente,
+        tipo_documento: cliente.tipo_documento,
+        numero_documento: cliente.numero_documento,
+        nombre_completo: cliente.nombre_completo,
+        telefono: cliente.telefono,
+        correo: cliente.correo,
+        tipo_usuario: cliente.tipo_usuario
+      });
+      
+      setClienteEncontrado(true);
+      toast.success(`¡Cliente encontrado! ${cliente.nombre_completo}`);
+    } catch (error) {
+      if (error.response?.status === 404) {
+        setClienteEncontrado(false);
+      } else {
+        console.error('Error al buscar cliente:', error);
+      }
+    } finally {
+      setBuscandoCliente(false);
+    }
+  };
+
   useEffect(() => {
     if (socket) {
       socket.on('turno_generado', (turno) => {
