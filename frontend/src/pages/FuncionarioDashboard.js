@@ -48,6 +48,8 @@ const FuncionarioDashboard = () => {
     prioridad: ''
   });
   const [servicioRedirigir, setServicioRedirigir] = useState('');
+  const [clienteEncontrado, setClienteEncontrado] = useState(false);
+  const [buscandoCliente, setBuscandoCliente] = useState(false);
 
   useEffect(() => {
     cargarTurnos();
