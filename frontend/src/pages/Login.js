@@ -37,7 +37,7 @@ const Login = () => {
       >
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-white text-center px-8">
-            <img src="/Logo_unad_color.png" alt="UNAD Logo" className="h-32 mx-auto mb-6 drop-shadow-2xl bg-white/10 p-4 rounded-xl" />
+            <img src="/logo-unad.png" alt="UNAD Logo" className="h-32 mx-auto mb-6 drop-shadow-2xl bg-white/10 p-4 rounded-xl" />
             <p className="text-2xl font-heading font-bold mb-2">Sistema de Gestión de Turnos</p>
             <p className="text-lg opacity-90">Eficiencia y transparencia en la atención</p>
           </div>
