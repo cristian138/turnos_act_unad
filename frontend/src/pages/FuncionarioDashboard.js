@@ -361,6 +361,7 @@ const FuncionarioDashboard = () => {
                   value={datosCliente.nombre_completo}
                   onChange={(e) => setDatosCliente({...datosCliente, nombre_completo: e.target.value})}
                   placeholder="Juan Pérez García"
+                  className={clienteEncontrado ? 'border-green-500 bg-green-50' : ''}
                 />
               </div>
 
@@ -371,6 +372,7 @@ const FuncionarioDashboard = () => {
                     value={datosCliente.telefono}
                     onChange={(e) => setDatosCliente({...datosCliente, telefono: e.target.value})}
                     placeholder="3001234567"
+                    className={clienteEncontrado ? 'border-green-500 bg-green-50' : ''}
                   />
                 </div>
                 <div>
