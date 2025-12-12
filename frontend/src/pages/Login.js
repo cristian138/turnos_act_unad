@@ -104,13 +104,6 @@ const Login = () => {
                 )}
               </Button>
             </form>
-
-            <div className="mt-6 p-4 bg-slate-100 rounded-md">
-              <p className="text-sm text-slate-600 font-medium mb-2">Credenciales de prueba:</p>
-              <p className="text-xs text-slate-500">Admin: admin@unad.edu.co / admin123</p>
-              <p className="text-xs text-slate-500">Funcionario: funcionario@unad.edu.co / func123</p>
-              <p className="text-xs text-slate-500">VAP: vap@unad.edu.co / vap123</p>
-            </div>
           </div>
         </div>
       </div>
