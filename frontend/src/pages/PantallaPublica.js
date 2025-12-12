@@ -121,10 +121,15 @@ const PantallaPublica = () => {
                   <p className="text-4xl text-accent mb-4 animate-pulse font-bold">
                     🔔 LLAMANDO TURNO
                   </p>
-                  <p className="font-mono text-9xl font-black text-primary mb-6 animate-pulse">
+                  <p className="font-mono text-9xl font-black text-primary mb-4 animate-pulse">
                     {turnoActual.codigo}
                   </p>
-                  <p className="text-4xl text-white mb-4">{turnoActual.servicio_nombre}</p>
+                  {turnoActual.nombre_completo && (
+                    <p className="text-3xl text-white mb-4 font-semibold">
+                      {turnoActual.nombre_completo}
+                    </p>
+                  )}
+                  <p className="text-2xl text-slate-300 mb-4">{turnoActual.servicio_nombre}</p>
                   <p className="text-3xl text-accent font-bold mb-2">
                     Por favor acérquese a:
                   </p>
@@ -141,10 +146,15 @@ const PantallaPublica = () => {
                   <p className="text-3xl text-green-400 mb-4 font-bold">
                     ✅ EN ATENCIÓN
                   </p>
-                  <p className="font-mono text-8xl font-black text-white mb-6">
+                  <p className="font-mono text-8xl font-black text-white mb-4">
                     {turnoActual.codigo}
                   </p>
-                  <p className="text-3xl text-slate-300 mb-4">{turnoActual.servicio_nombre}</p>
+                  {turnoActual.nombre_completo && (
+                    <p className="text-2xl text-slate-300 mb-4 font-semibold">
+                      {turnoActual.nombre_completo}
+                    </p>
+                  )}
+                  <p className="text-2xl text-slate-400 mb-4">{turnoActual.servicio_nombre}</p>
                   {turnoActual.modulo && (
                     <p className="text-4xl text-white bg-primary/30 px-6 py-3 rounded-lg">
                       {turnoActual.modulo}
