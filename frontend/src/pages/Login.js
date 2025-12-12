@@ -48,7 +48,7 @@ const Login = () => {
         <div className="w-full max-w-md">
           <div className="bg-white p-8 rounded-lg shadow-sm border">
             <div className="mb-8 text-center">
-              <img src="/logo-unad.png" alt="UNAD Logo" className="h-24 mx-auto mb-6" />
+              <img src="/Logo_unad_color.png" alt="UNAD Logo" className="h-24 mx-auto mb-6" />
               <h2 className="text-3xl font-heading font-bold text-primary mb-2">Iniciar Sesión</h2>
               <p className="text-slate-600">Ingresa tus credenciales para continuar</p>
             </div>
