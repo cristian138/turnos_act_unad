@@ -94,17 +94,19 @@ def transformar_cliente(cliente_mysql):
     
     nombre_completo = ' '.join(partes_nombre)
     
-    # Obtener tipo de documento
-    tipo_doc = cliente_mysql.get('documento', 'CC')
-    if not tipo_doc:
-        tipo_doc = 'CC'
+    # Tipo de documento (CC, CE, TI, etc.) - viene directo de MySQL
+    tipo_doc = cliente_mysql.get('documento', '')
+    if tipo_doc:
+        tipo_doc = str(tipo_doc).strip().upper()
+    else:
+        tipo_doc = 'CC'  # Default si está vacío
     
     # Obtener número de documento
     numero_doc = cliente_mysql.get('numero', '')
     if numero_doc:
         numero_doc = str(numero_doc).strip()
     
-    # Obtener tipo de usuario
+    # Obtener tipo de usuario (aspirante, estudiante)
     tipo_usuario = cliente_mysql.get('tipo de usuario', 'estudiante')
     if not tipo_usuario:
         tipo_usuario = 'estudiante'
