@@ -105,40 +105,77 @@ const FuncionarioDashboard = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('turno_generado', (turno) => {
-        const cantidadAnterior = turnos.length;
+      // Escuchar nuevo turno generado
+      const handleTurnoGenerado = (turno) => {
+        console.log('Turno generado recibido:', turno);
         cargarTurnos();
         
         // Verificar si el turno es para los servicios del funcionario
         if (usuario?.servicios_asignados?.includes(turno.servicio_id)) {
           toast.info(
-            `Nuevo turno ${turno.codigo} en ${turno.servicio_nombre}`,
+            `🔔 Nuevo turno ${turno.codigo} en ${turno.servicio_nombre}`,
             {
-              icon: <Bell className="h-4 w-4" />,
               duration: 5000
             }
           );
           
-          // Notificación sonora (opcional)
-          if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('Nuevo Turno Disponible', {
-              body: `${turno.codigo} - ${turno.servicio_nombre}`,
-              icon: '/logo-unad.png'
-            });
-          }
+          // Sonido de notificación
+          try {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1sbJuYj4CAUF2FoqKJclVVb5Gkm4l0XV1xi5+XjH1oZXKFko+IgHdyd4CHiYmIhYKChYeJiYmHhYODhYeJiYmIhoSEhYeIiIiHhoWFhoeIiIiHhoWFhoeIiIeHhoaGh4eIiIeHhoaGh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHhw==');
+            audio.volume = 0.5;
+            audio.play().catch(() => {});
+          } catch (e) {}
         }
-      });
+      };
 
-      socket.on('turno_cerrado', () => {
+      // Escuchar turno llamado (actualizar cola)
+      const handleTurnoLlamado = () => {
+        console.log('Turno llamado - actualizando cola');
         cargarTurnos();
-      });
+      };
+
+      // Escuchar turno cerrado/finalizado
+      const handleTurnoCerrado = () => {
+        console.log('Turno cerrado - actualizando cola');
+        cargarTurnos();
+      };
+
+      // Escuchar turno cancelado
+      const handleTurnoCancelado = () => {
+        console.log('Turno cancelado - actualizando cola');
+        cargarTurnos();
+      };
+
+      // Escuchar turno redirigido
+      const handleTurnoRedirigido = (turno) => {
+        console.log('Turno redirigido:', turno);
+        cargarTurnos();
+        if (usuario?.servicios_asignados?.includes(turno.servicio_id)) {
+          toast.info(`🔄 Turno ${turno.codigo} redirigido a ${turno.servicio_nombre}`);
+        }
+      };
+
+      socket.on('turno_generado', handleTurnoGenerado);
+      socket.on('nuevo_turno', handleTurnoGenerado); // Por compatibilidad
+      socket.on('turno_llamado', handleTurnoLlamado);
+      socket.on('turno_cerrado', handleTurnoCerrado);
+      socket.on('turno_finalizado', handleTurnoCerrado);
+      socket.on('turno_cancelado', handleTurnoCancelado);
+      socket.on('turno_redirigido', handleTurnoRedirigido);
+      socket.on('turno_atendiendo', handleTurnoLlamado);
 
       return () => {
-        socket.off('turno_generado');
-        socket.off('turno_cerrado');
+        socket.off('turno_generado', handleTurnoGenerado);
+        socket.off('nuevo_turno', handleTurnoGenerado);
+        socket.off('turno_llamado', handleTurnoLlamado);
+        socket.off('turno_cerrado', handleTurnoCerrado);
+        socket.off('turno_finalizado', handleTurnoCerrado);
+        socket.off('turno_cancelado', handleTurnoCancelado);
+        socket.off('turno_redirigido', handleTurnoRedirigido);
+        socket.off('turno_atendiendo', handleTurnoLlamado);
       };
     }
-  }, [socket, turnos, usuario]);
+  }, [socket, usuario]);
 
   const cargarTurnos = async () => {
     try {
