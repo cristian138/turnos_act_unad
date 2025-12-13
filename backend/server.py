@@ -779,15 +779,16 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+# Register shutdown event before creating socket_app
+@app.on_event("shutdown")
+async def shutdown_db_client():
+    client.close()
+
 socket_app = socketio.ASGIApp(
     sio,
     other_asgi_app=app,
     socketio_path='socket.io'
 )
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
 
 # Export socket_app as app for supervisor to use
 app = socket_app
