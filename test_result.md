@@ -160,9 +160,16 @@ backend:
     implemented: true
     working: true
     file: "/app/backend/server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Usuario reportó error 403 Forbidden al conectar desde otros dispositivos en la red local"
+      - working: true
+        agent: "main"
+        comment: "CORS corregido - Actualizado CORSMiddleware y socketio.AsyncServer para permitir todos los orígenes (*). Configuración allow_credentials=False para compatibilidad con allow_origins=['*']"
 
 frontend:
   - task: "Login Page"
