@@ -162,7 +162,7 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "user"
@@ -170,6 +170,9 @@ backend:
       - working: true
         agent: "main"
         comment: "CORS corregido - Actualizado CORSMiddleware y socketio.AsyncServer para permitir todos los orígenes (*). Configuración allow_credentials=False para compatibilidad con allow_origins=['*']"
+      - working: true
+        agent: "testing"
+        comment: "✅ WEBSOCKET CORS FIX VERIFICADO - Pruebas completas realizadas: (1) Login exitoso con los 3 usuarios de prueba (admin@unad.edu.co, funcionario@unad.edu.co, vap@unad.edu.co), (2) CORS configurado correctamente con allow_origins=['*'] y allow_credentials=False, (3) Generación de turno y ciclo completo de vida probado (creado→llamado→atendiendo→finalizado), (4) Eventos WebSocket se emiten correctamente en cada transición, (5) Conexiones desde dispositivos externos ahora funcionan (error 403 Forbidden resuelto). Configuración CORS compatible y WebSocket operativo."
 
 frontend:
   - task: "Login Page"
