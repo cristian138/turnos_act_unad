@@ -234,13 +234,14 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus: []
+  current_focus: 
+    - "WebSocket para actualizaciones en tiempo real"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
-    message: "Issue P1 (botón Generar Turno para Funcionario) verificado como RESUELTO. El botón funciona correctamente y abre el diálogo con todos los campos. Issue P0 (configuración Nginx) documentado en /app/CONFIGURACION_NGINX_PRODUCCION.md para que el usuario lo aplique en su VPS."
+    message: "CORS fix aplicado para WebSocket - Se modificó CORSMiddleware con allow_origins=['*'] y allow_credentials=False. Socket.io ya tenía cors_allowed_origins='*'. Necesita verificación de conexión WebSocket."
   - agent: "testing"
     message: "✅ TESTING COMPLETO - Sistema de Gestión de Turnos UNAD completamente funcional. Todos los endpoints principales verificados, login para los 3 roles funcionando correctamente, y ciclo completo de turnos probado exitosamente. El sistema está listo para producción. Archivos de prueba: /app/backend_test.py (27/27 tests passed) y /app/focused_lifecycle_test.py (workflow específico verificado)."
