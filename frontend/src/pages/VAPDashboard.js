@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../lib/api';
+import { useSocket } from '../context/SocketContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -14,6 +15,7 @@ import { toast } from 'sonner';
 import { Ticket, Printer, CheckCircle, Clock, PhoneCall, UserCheck, XCircle, RefreshCw } from 'lucide-react';
 
 const VAPDashboard = () => {
+  const { socket } = useSocket();
   const [servicios, setServicios] = useState([]);
   const [servicioSeleccionado, setServicioSeleccionado] = useState('');
   const [prioridad, setPrioridad] = useState('');
@@ -36,11 +38,32 @@ const VAPDashboard = () => {
   useEffect(() => {
     cargarDatos();
     cargarTurnosHoy();
-    
-    // Actualizar cada 30 segundos
-    const interval = setInterval(cargarTurnosHoy, 30000);
-    return () => clearInterval(interval);
   }, []);
+
+  // Escuchar eventos de WebSocket para actualizar la lista en tiempo real
+  useEffect(() => {
+    if (socket) {
+      const actualizarLista = () => {
+        cargarTurnosHoy();
+      };
+
+      socket.on('turno_generado', actualizarLista);
+      socket.on('turno_llamado', actualizarLista);
+      socket.on('turno_atendiendo', actualizarLista);
+      socket.on('turno_finalizado', actualizarLista);
+      socket.on('turno_cancelado', actualizarLista);
+      socket.on('turno_redirigido', actualizarLista);
+
+      return () => {
+        socket.off('turno_generado', actualizarLista);
+        socket.off('turno_llamado', actualizarLista);
+        socket.off('turno_atendiendo', actualizarLista);
+        socket.off('turno_finalizado', actualizarLista);
+        socket.off('turno_cancelado', actualizarLista);
+        socket.off('turno_redirigido', actualizarLista);
+      };
+    }
+  }, [socket]);
 
   const cargarDatos = async () => {
     try {
