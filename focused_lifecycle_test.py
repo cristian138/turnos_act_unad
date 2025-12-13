@@ -11,7 +11,7 @@ from datetime import datetime
 
 def test_specific_workflow():
     """Test the exact workflow requested by the user"""
-    base_url = "https://shiftmgr-2.preview.emergentagent.com"
+    base_url = "https://turnosapp.preview.emergentagent.com"
     
     print("🎯 Testing Specific UNAD Turno Lifecycle Workflow")
     print("=" * 60)
