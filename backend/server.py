@@ -785,12 +785,12 @@ socket_app = socketio.ASGIApp(
     socketio_path='socket.io'
 )
 
-# Make socket_app the default app for supervisor
-app = socket_app
-
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+# Export socket_app as app for supervisor to use
+app = socket_app
 
 if __name__ == "__main__":
     import uvicorn
